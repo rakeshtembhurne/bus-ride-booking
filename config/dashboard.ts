@@ -28,6 +28,12 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.USER,
         disabled: true,
       },
+      {
+        href: "/dashboard/manager",
+        icon: "package",
+        title: "Manager",
+        authorizeOnly: UserRole.ADMIN,
+      },
     ],
   },
   {
