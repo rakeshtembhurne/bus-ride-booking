@@ -1,10 +1,7 @@
-
 import { updateManager, deleteManager } from "@/lib/manager"; 
-
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   const { name, email } = await req.json();
-
 
   if (!name || !email) {
     return new Response(
@@ -14,9 +11,10 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 
   try {
-    const updatedManager = await updateManager(parseInt(params.id), name, email); 
+    const updatedManager = await updateManager(parseInt(params.id), name, email);
     return new Response(JSON.stringify(updatedManager), { status: 200 });
   } catch (error) {
+    console.error('Error updating manager:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { status: 500 }
@@ -24,7 +22,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-
+// Handler for deleting a manager
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
   try {
     const response = await deleteManager(parseInt(params.id)); 

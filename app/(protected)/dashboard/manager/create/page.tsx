@@ -1,3 +1,4 @@
+
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
@@ -22,25 +23,12 @@ export default async function AdminPage() {
   const pageSize = 10; // Records per page
 
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/managers?page=${pageIndex}&limit=${pageSize}`,
-      { cache: "no-store" } // Ensures fresh data is fetched for each request
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch managers data");
-    }
-
-    const result = await response.json();
+   
 
     return (
       <div className="flex flex-col gap-5">
-        <TransactionsList
-          initialData={result.data}
-          initialTotal={result.total}
-          pageIndex={pageIndex}
-          pageSize={pageSize}
-        />
+        
+        <ManagerForm />
       </div>
     );
   } catch (error) {

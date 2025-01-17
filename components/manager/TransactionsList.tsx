@@ -1,19 +1,37 @@
-'use client';
-import { ChevronDown } from "lucide-react";
-import React, { useState, useEffect } from 'react';
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+import {
+  faEdit,
+  faEye,
+  faPlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   ColumnDef,
   ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table";
+import { ChevronDown } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -22,21 +40,67 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"; 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEdit, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"; // Ensure this path is correct
+} from "@/components/ui/table";
+
+// Ensure this path is correct
 
 export type Manager = {
   id: string;
   name: string;
   email: string;
 };
+
+// Server-side function to handle API requests
+async function fetchManagers(pageIndex: number, pageSize: number) {
+  const response = await fetch(
+    `/api/managers?page=${pageIndex}&limit=${pageSize}`,
+  );
+  if (!response.ok) {
+    toast.error("Failed to fetch data");
+  }
+  return response.json();
+}
+
+// async function updateManager(
+//   managerId: string,
+//   managerName: string,
+//   managerEmail: string,
+// ) {
+//   const response = await fetch(`/api/managers/${managerId}`, {
+//     method: "PUT",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ name: managerName, email: managerEmail }),
+//   });
+//   if (!response.ok) {
+//     throw new Error("Failed to update manager");
+//   }
+//   return response.json();
+// }
+
+// async function addManager(managerName: string, managerEmail: string) {
+//   const response = await fetch("/api/managers", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ name: managerName, email: managerEmail }),
+//   });
+//   if (!response.ok) {
+//     throw new Error("Failed to add manager");
+//   }
+//   return response.json();
+// }
+
+async function deleteManager(managerId: string) {
+  const response = await fetch(`/api/managers/${managerId}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to delete manager");
+  }
+}
 
 export default function TransactionsList() {
   const [data, setData] = useState<Manager[]>([]);
@@ -47,11 +111,11 @@ export default function TransactionsList() {
   const [isOpen, setIsOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [viewMode, setViewMode] = useState(false);
-  const [managerId, setManagerId] = useState('');
-  const [managerName, setManagerName] = useState('');
-  const [managerEmail, setManagerEmail] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [managerId, setManagerId] = useState("");
+  const [managerName, setManagerName] = useState("");
+  const [managerEmail, setManagerEmail] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [pageIndex, setPageIndex] = useState(1); // Current page
   const [pageSize, setPageSize] = useState(10); // Records per page
   const [total, setTotal] = useState(0); // Total records
@@ -59,11 +123,7 @@ export default function TransactionsList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/managers?page=${pageIndex}&limit=${pageSize}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const result = await response.json();
+        const result = await fetchManagers(pageIndex, pageSize);
         setData(result.data);
         setTotal(result.total); // Set the total number of records for pagination
       } catch (err) {
@@ -83,55 +143,33 @@ export default function TransactionsList() {
 
   const handleCloseDialog = () => {
     setIsOpen(false);
-    setManagerName('');
-    setManagerEmail('');
-    setError('');
-    setSuccess('');
+    setManagerName("");
+    setManagerEmail("");
+    setError("");
+    setSuccess("");
     setEditMode(false);
     setViewMode(false);
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    try {
-      if (editMode) {
-        const response = await fetch(`/api/managers/${managerId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name: managerName, email: managerEmail }),
-        });
-        if (response.ok) {
-          setSuccess('Manager updated successfully');
-          const updatedData = await response.json();
-          setData((prevData) => prevData.map(manager => manager.id === managerId ? updatedData : manager));
-        } else {
-          setError('Failed to update manager');
-        }
-      } else {
-        const response = await fetch('/api/managers', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name: managerName, email: managerEmail }),
-        });
-        if (response.ok) {
-          setSuccess('Manager added successfully');
-          const newManager = await response.json();
-          setData((prevData) => [...prevData, newManager]);
-        } else {
-          setError('Failed to add manager');
-        }
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      setError('An error occurred');
-    } finally {
-      handleCloseDialog();
-    }
-  };
+  // const handleSubmit = async (event: React.FormEvent) => {
+  //   event.preventDefault();
+  //   try {
+  //     if (editMode) {
+  //       const updatedData = await updateManager(managerId, managerName, managerEmail);
+  //       setSuccess('Manager updated successfully');
+  //       setData((prevData) => prevData.map(manager => manager.id === managerId ? updatedData : manager));
+  //     } else {
+  //       const newManager = await addManager(managerName, managerEmail);
+  //       setSuccess('Manager added successfully');
+  //       setData((prevData) => [...prevData, newManager]);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error submitting form:', error);
+  //     setError('An error occurred');
+  //   } finally {
+  //     handleCloseDialog();
+  //   }
+  // };
 
   const handleEdit = (manager: Manager) => {
     setEditMode(true);
@@ -150,21 +188,39 @@ export default function TransactionsList() {
   };
 
   const handleDelete = async (managerId: string) => {
-    if (window.confirm('Are you sure you want to delete this manager?')) {
+    if (window.confirm("Are you sure you want to delete this manager?")) {
       try {
-        const response = await fetch(`/api/managers/${managerId}`, {
-          method: 'DELETE',
-        });
-        if (response.ok) {
-          setData((prevData) => prevData.filter(manager => manager.id !== managerId));
-        } else {
-          setError('Failed to delete manager');
-        }
+        await deleteManager(managerId);
+        setData((prevData) =>
+          prevData.filter((manager) => manager.id !== managerId),
+        );
+        toast.success("Manager deleted successfully!");
       } catch (error) {
-        console.error('Error deleting manager:', error);
-        setError('An error occurred while deleting');
+        console.error("Error deleting manager:", error);
+        toast.error("An error occurred while deleting the manager.");
       }
     }
+  };
+
+  const router = useRouter();
+  const handleAdd = () => {
+    router.push("/dashboard/manager/create"); // Navigate to the correct path
+  };
+
+  // const handleEditF = (manager: Manager) => {
+  //   const encodedName = encodeURIComponent(manager.name);
+  //   const encodedEmail = encodeURIComponent(manager.email);
+  //   // Redirect to the edit page with the correct ID and query parameters
+  //   router.push(`/dashboard/manager/create/${manager.id}?name=${encodedName}&email=${encodedEmail}`);
+  // };
+  const handleEditF = (manager: Manager) => {
+    const query = new URLSearchParams({
+      name: manager.name,
+      email: manager.email,
+    }).toString();
+
+    const url = `/dashboard/manager/create/${manager.id}?${query}`;
+    router.push(url);
   };
 
   const columns: ColumnDef<Manager>[] = [
@@ -186,10 +242,16 @@ export default function TransactionsList() {
           <Button onClick={() => handleView(row.original)} variant="outline">
             <FontAwesomeIcon icon={faEye} />
           </Button>
-          <Button onClick={() => handleEdit(row.original)} variant="outline">
+          {/* <Button onClick={() => handleEdit(row.original)} variant="outline">
+            <FontAwesomeIcon icon={faEdit} />
+          </Button> */}
+          <Button onClick={() => handleEditF(row.original)} variant="outline">
             <FontAwesomeIcon icon={faEdit} />
           </Button>
-          <Button onClick={() => handleDelete(row.original.id)} variant="outline">
+          <Button
+            onClick={() => handleDelete(row.original.id)}
+            variant="outline"
+          >
             <FontAwesomeIcon icon={faTrash} />
           </Button>
         </div>
@@ -218,14 +280,20 @@ export default function TransactionsList() {
 
   return (
     <div className="w-full">
-      <h2 className="text-lg font-semibold mb-4">Manager List</h2>
+      <h2 className="mb-4 text-lg font-semibold">Manager List</h2>
 
-      <div className="flex justify-end mb-4">
-        <button
+      <div className="mb-4 flex justify-end">
+        {/* <button
           onClick={handleOpenDialog}
           className="inline-flex items-center justify-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ring-offset-background select-none bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3 rounded-md "
         >
           <FontAwesomeIcon icon={faPlus} className="mr-2" />
+          Add Manager
+        </button> */}
+        <button
+          onClick={handleAdd}
+          className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+        >
           Add Manager
         </button>
       </div>
@@ -279,7 +347,7 @@ export default function TransactionsList() {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -289,165 +357,122 @@ export default function TransactionsList() {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
-                    No results.
-                  </TableCell>
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              )}
-
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>
 
-      <div className="flex justify-between items-center mt-4">
-          <div className="text-sm">
-            Showing {Math.min((pageIndex - 1) * pageSize + 1, total)}–
-            {Math.min(pageIndex * pageSize, total)} of {total} results
-          </div>
-          <div className="flex space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPageIndex((prev) => Math.max(prev - 1, 1))}
-              disabled={pageIndex === 1}
-            >
-              Previous
-            </Button>
-            {pageIndex > 3 && (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPageIndex(1)}
-                >
-                  1
-                </Button>
-                {pageIndex > 4 && <span className="text-gray-500">...</span>}
-              </>
-            )}
-            {Array.from(
-              { length: Math.min(5, totalPages) }, // Only show up to 5 page numbers
-              (_, i) => {
-                const page = Math.max(1, pageIndex - 2) + i; // Center around the current page
-                if (page > totalPages) return null;
-                return (
-                  <Button
-                    key={page}
-                    variant={pageIndex === page ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setPageIndex(page)}
-                  >
-                    {page}
-                  </Button>
-                );
-              }
-            )}
-            {pageIndex < totalPages - 2 && (
-              <>
-                {pageIndex < totalPages - 3 && <span className="text-gray-500">...</span>}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPageIndex(totalPages)}
-                >
-                  {totalPages}
-                </Button>
-              </>
-            )}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPageIndex((prev) => Math.min(prev + 1, totalPages))}
-              disabled={pageIndex === totalPages}
-            >
-              Next
-            </Button>
-          </div>
+      <div className="mt-4 flex items-center justify-between">
+        <div className="text-sm">
+          Showing {Math.min((pageIndex - 1) * pageSize + 1, total)}–
+          {Math.min(pageIndex * pageSize, total)} of {total} results
         </div>
-
-    
-
-      {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 z-50">
-          <div className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-6 bg-white text-black rounded-md max-w-sm w-full z-50`}>
-            <h3 className="text-lg font-semibold">{editMode ? 'Edit Manager' : viewMode ? 'View Manager' : 'Add a New Manager'}</h3>
-
-            {viewMode ? (
-              <div>
-                <p><strong>Name:</strong> {managerName}</p>
-                <p><strong>Email:</strong> {managerEmail}</p>
-                <button
-                  type="button"
-                  className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-md"
-                  onClick={handleCloseDialog}
+        <div className="flex space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPageIndex((prev) => Math.max(prev - 1, 1))}
+            disabled={pageIndex === 1}
+          >
+            Previous
+          </Button>
+          {pageIndex > 3 && (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPageIndex(1)}
+              >
+                1
+              </Button>
+              {pageIndex > 4 && <span className="text-gray-500">...</span>}
+            </>
+          )}
+          {Array.from(
+            { length: Math.min(5, totalPages) }, // Only show up to 5 page numbers
+            (_, i) => {
+              const page = Math.max(1, pageIndex - 2) + i; // Center around the current page
+              if (page > totalPages) return null;
+              return (
+                <Button
+                  key={page}
+                  variant={pageIndex === page ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPageIndex(page)}
                 >
-                  Close
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit}>
-                {error && <p className="text-red-500">{error}</p>}
-                {success && <p className="text-green-500">{success}</p>}
-
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="managerName" className="block font-medium text-sm">
-                      Manager Name
-                    </label>
-                    <input
-                      type="text"
-                      id="managerName"
-                      name="managerName"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      value={managerName}
-                      onChange={(e) => setManagerName(e.target.value)}
-                      placeholder="Enter Manager Name"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="managerEmail" className="block font-medium text-sm">
-                      Manager Email
-                    </label>
-                    <input
-                      type="email"
-                      id="managerEmail"
-                      name="managerEmail"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      value={managerEmail}
-                      onChange={(e) => setManagerEmail(e.target.value)}
-                      placeholder="Enter Manager Email"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-between mt-6">
-                  <button
-                    type="button"
-                    className="px-4 py-2 bg-gray-500 text-white rounded-md"
-                    onClick={handleCloseDialog}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-primary text-white rounded-md"
-                  >
-                    {editMode ? 'Update Manager' : 'Add Manager'}
-                  </button>
-                </div>
-              </form>
-            )}
+                  {page}
+                </Button>
+              );
+            },
+          )}
+          {pageIndex < totalPages - 2 && (
+            <>
+              {pageIndex < totalPages - 3 && (
+                <span className="text-gray-500">...</span>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPageIndex(totalPages)}
+              >
+                {totalPages}
+              </Button>
+            </>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              setPageIndex((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={pageIndex === totalPages}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="w-96 rounded-md bg-white p-6 shadow-md">
+            <h3 className="mb-4 text-lg font-semibold">View Manager</h3>
+            <p>
+              <strong>Name:</strong> {managerName}
+            </p>
+            <p>
+              <strong>Email:</strong> {managerEmail}
+            </p>
+            <div className="mt-6 text-right">
+              <button
+                className="rounded-md bg-gray-500 px-4 py-2 text-white"
+                onClick={handleCloseDialog}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -34,6 +34,12 @@ export const sidebarLinks: SidebarNavItem[] = [
         title: "Manager",
         authorizeOnly: UserRole.ADMIN,
       },
+      // {
+      //   href: "/dashboard/vehicle",
+      //   icon: "package",
+      //   title: "Vehicle",
+      //   authorizeOnly: UserRole.ADMIN,
+      // },
     ],
   },
   {
