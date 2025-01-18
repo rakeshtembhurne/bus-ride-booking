@@ -6,7 +6,14 @@ export const getFareById = async (id: string) => {
         const fare = await prisma.fare.findUnique({
             where: { id },
             include: {
-                route: true,
+                route: {
+                    include: {
+                        vehicle: true,
+                        bookings: true,
+                        origin: true,
+                        destination: true,
+                    }
+                },
                 origin: true,
                 destination: true,
             }
@@ -21,7 +28,13 @@ export const getAllFares = async () => {
     try {
         const fares = await prisma.fare.findMany({
             include: {
-                route: true,
+                route: {
+                    include: {
+                        vehicle: true,
+                        origin: true,
+                        destination: true,
+                    }
+                },
                 origin: true,
                 destination: true,
             }
