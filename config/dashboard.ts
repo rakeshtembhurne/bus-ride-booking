@@ -28,6 +28,12 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.USER,
         disabled: true,
       },
+      {
+        href: "/dashboard/payment-page",
+        icon: "package",
+        title: "Payments",
+        authorizeOnly: UserRole.USER,
+      },
     ],
   },
   {
