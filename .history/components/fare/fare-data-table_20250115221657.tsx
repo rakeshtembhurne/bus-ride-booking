@@ -1,3 +1,4 @@
+npx prisma db push
 "use client"
 
 import * as React from "react"
