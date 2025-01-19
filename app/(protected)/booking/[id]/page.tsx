@@ -41,9 +41,9 @@ const BookingConfirmation = async ({ params }: BookingPageProps) => {
             />
 
             <BookingConfirm
-                id={bus?.id}
-                userid={user?.id}
-                fare={bus?.price}
+                id={id as string}
+                userid={user?.id as string}
+                fare={bus?.price as number}
             />
         </>
 

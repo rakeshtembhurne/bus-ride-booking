@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getAllFares } from "@/lib/fare";
 import { NextRequest, NextResponse } from "next/server";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { method } = req;
 
     if (method === "GET") {

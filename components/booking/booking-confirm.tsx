@@ -15,6 +15,10 @@ const BookingConfirm: React.FC<BookingConfirmProps> = ({
     userid,
     fare,
 
+}:{
+    id:string|undefined; 
+    userid:string|undefined;
+    fare:number|undefined;
 }) => {
     const [numPassengers, setNumPassengers] = useState(1);
     const [selectedDate, setSelectedDate] = useState(
@@ -45,6 +49,12 @@ const BookingConfirm: React.FC<BookingConfirmProps> = ({
 
         try {
             // API call to create a booking
+            console.log({
+                fareId: id,
+                userId: userid,
+                date: selectedDate,
+                seatNo: seatNo,
+            });
             const response = await fetch("/api/booking", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
