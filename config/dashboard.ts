@@ -29,18 +29,33 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.USER,
         disabled: true,
       },
+
+      {
+        href: "/fare",
+        icon: "bus",
+        title: "Fare Panel",
+        authorizeOnly: UserRole.ADMIN,
+      },
+
+      {
+        href: "/location",
+        icon: "mapin",
+        title: "Location Panel",
+        authorizeOnly: UserRole.ADMIN,
+      },
+      {
+        href: "/dashboard/vehicle",
+        icon: "post",
+        title: "Vehicle",
+        authorizeOnly: UserRole.ADMIN,
+        disabled: false,
+      },
       {
         href: "/dashboard/manager",
         icon: "package",
         title: "Manager",
         authorizeOnly: UserRole.ADMIN,
-      },
-      {
-        href: "/dashboard/vehicle",
-        icon: "package",
-        title: "Vehicle",
-        authorizeOnly: UserRole.ADMIN,
-      },
+      }
     ],
 
     
