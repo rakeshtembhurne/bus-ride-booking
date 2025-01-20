@@ -28,13 +28,6 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.USER,
         disabled: true,
       },
-      {
-        href: "/dashboard/vehicle",
-        icon: "post",
-        title: "Vehicle",
-        authorizeOnly: UserRole.ADMIN,
-        disabled: false,
-      },
     ],
   },
   {
