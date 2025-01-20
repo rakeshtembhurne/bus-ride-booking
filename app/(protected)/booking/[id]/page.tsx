@@ -39,7 +39,7 @@ const BookingConfirmation: React.FC<BookingPageProps> = async ({ params }) => {
             />
 
             <BookingConfirm
-                id={bus?.id as string}
+                id={id as string}
                 userid={user?.id as string}
                 fare={bus?.price as number}
             />

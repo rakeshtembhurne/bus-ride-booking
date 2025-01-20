@@ -1,9 +1,6 @@
 import { addBooking, getAllBookings } from "@/lib/booking";
-import { prisma } from "@/lib/db";
 import { getFareById } from "@/lib/fare";
-import { getUserById } from "@/lib/user";
-import { NextApiRequest, NextApiResponse } from "next";
-import { useParams, useSearchParams } from "next/navigation";
+import { getRouteById } from "@/lib/route";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -17,24 +14,24 @@ export async function POST(req: Request) {
         }
 
         const bus = await getFareById(fareId)
-
-        const user = await getUserById(userId)
-
-
+        const route = await getRouteById(bus?.routeId as string);
         const bookingData = {
-            routeId: bus?.routeId,
+            routeId: bus?.routeId as string,
             userId: userId,
-            fromLocationId: bus?.fromLocationId,
-            toLocationId: bus?.toLocationId,
+            fromLocationId: bus?.origin.id as string,
+            toLocationId: bus?.destination.id as string,
             date: new Date(date).toISOString(),
             seatNumber: seatNo,
-            bookingStatus: "Payment Pending",
+            bookingStatus: "pending",
             fareId: fareId,
+            availableSeats: route?.vehicle.seats as number -1
         }
+
         const result = await addBooking(bookingData);
 
-
         // Check if the booking was successful
+        if(result?.error)   
+            return NextResponse.json(result, { status: 400 });
         return NextResponse.json(result, { status: 201 });
         // return NextResponse.json({ success: true, booking: result }, { status: 200 });
     } catch (error: any) {
