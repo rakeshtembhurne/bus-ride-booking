@@ -6,19 +6,35 @@ import AvailableBusCard from "./buses-card";
 import { getAllLocations } from "@/lib/location";
 
 interface Location {
-    id: string;
-    name: string;
+    id: string | undefined;
+    name: string | undefined;
 }
 
 interface Bus {
     id: string;
-    name: string;
-    origin: string;
-    destination: string;
-    departureTime: string;
-    arrivalTime: string;
-    fare: number;
-    route: string;
+    route?: {
+        vehicle?: {
+            name: string | undefined;
+            number: string | undefined;
+            type: string | undefined;
+            seats: number | undefined;
+        };
+        origin: {
+            name: string | undefined;
+        };
+        destination: {
+            name: string | undefined;
+        };
+        departureTime: string | undefined;
+        arrivalTime: string | undefined;
+    };
+    origin: {
+        name: string | undefined;
+    };
+    destination: {
+        name: string | undefined;
+    };
+    price: number | undefined;
 }
 
 const SearchBuses = () => {
@@ -93,16 +109,16 @@ const SearchBuses = () => {
         <>
 
             <div className="flex items-center justify-center ">
-                <form method="get" className=" w-[60vw] h-[10vh] rounded-3xl flex" onSubmit={handleSearch} >
+                <form method="get" className=" flex h-[10vh] w-[60vw] rounded-3xl" onSubmit={handleSearch} >
 
                     {/* Origin Dropdown */}
-                    <div className="w-[40%] h-full rounded-3xl">
+                    <div className="h-full w-2/5 rounded-3xl">
 
                         <select
                             id="origin"
                             name="origin"
                             // defaultValue={origin || ""}
-                            className="w-full h-[100%] px-8 py-2 rounded-l-3xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-md"
+                            className="sm:text-md size-full rounded-l-3xl border-gray-300 px-8 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         >
                             <option value="" disabled>
                                 Select Origin
@@ -116,12 +132,12 @@ const SearchBuses = () => {
                     </div>
 
                     {/* Destination Dropdown */}
-                    <div className="w-[40%] h-full bg-slate-500 rounded-3xl">
+                    <div className="h-full w-2/5 rounded-3xl bg-slate-500">
 
                         <select
                             id="desination"
                             name="destination"
-                            className="w-full h-[100%] px-8 py-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-md"
+                            className="sm:text-md size-full border-gray-300 px-8 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         >
 
                             <option value="" disabled>
@@ -138,7 +154,7 @@ const SearchBuses = () => {
                     {/* Search Button */}
                     <button
                         type="submit"
-                        className="w-[20%] bg-zinc-900 text-lg text-white py-2 px-5 rounded-r-3xl hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-700 focus:ring-offset-2"
+                        className="w-1/5 rounded-r-3xl bg-zinc-900 px-5 py-2 text-lg text-white hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-700 focus:ring-offset-2"
                     >
                         Search
                     </button>
@@ -147,22 +163,23 @@ const SearchBuses = () => {
 
             <EmptyPlaceholder>
                 {availableBuses.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {availableBuses.map((bus) => (
                             <AvailableBusCard
-                                id={bus.id}
-                                busName={bus.route.vehicle.name}
-                                startLocation={bus.route.origin.name}
-                                startTime={bus.route.departureTime}
-                                endLocation={bus.route.destination.name}
-                                endTime={bus.route.arrivalTime}
-                                vehicleNumber={bus.route.vehicle.number}
-                                userStartLocation={bus.origin.name}
-                                userEndLocation={bus.destination.name}
-                                fare={bus.price}
-                                type={bus.route.vehicle.type}
-                                availableSeats={bus.route.vehicle.seats}
-                            />
+                            id={bus.id}
+                            busName={bus.route?.vehicle?.name ?? "Unknown"} // Provide a default value
+                            startLocation={bus.route?.origin?.name ?? "Unknown"} // Add optional chaining
+                            startTime={bus.route?.departureTime ?? "Unknown"}
+                            endLocation={bus.route?.destination?.name ?? "Unknown"}
+                            endTime={bus.route?.arrivalTime ?? "Unknown"}
+                            vehicleNumber={bus.route?.vehicle?.number ?? "N/A"}
+                            userStartLocation={bus.origin?.name ?? "Unknown"}
+                            userEndLocation={bus.destination?.name ?? "Unknown"}
+                            fare={bus.price}
+                            type={bus.route?.vehicle?.type ?? "N/A"}
+                            availableSeats={bus.route?.vehicle?.seats ?? 0}
+                        />
+                        
                         ))}
                     </div>
                 ) : (
