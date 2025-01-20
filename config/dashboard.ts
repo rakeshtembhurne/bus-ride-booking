@@ -30,17 +30,19 @@ export const sidebarLinks: SidebarNavItem[] = [
         disabled: true,
       },
       {
+        href: "/dashboard/vehicle",
+        icon: "post",
+        title: "Vehicle",
+        authorizeOnly: UserRole.ADMIN,
+        disabled: false,
+      },
+
         href: "/dashboard/manager",
         icon: "package",
         title: "Manager",
         authorizeOnly: UserRole.ADMIN,
       },
-      // {
-      //   href: "/dashboard/vehicle",
-      //   icon: "package",
-      //   title: "Vehicle",
-      //   authorizeOnly: UserRole.ADMIN,
-      // },
+    
     ],
   },
   {
