@@ -35,19 +35,14 @@ export default async function AdminPage() {
 
     return (
       <div className="flex flex-col gap-5">
-        <TransactionsList
-          initialData={result.data}
-          initialTotal={result.total}
-          pageIndex={pageIndex}
-          pageSize={pageSize}
-        />
+        <TransactionsList/>
       </div>
     );
   } catch (error) {
     console.error("Error fetching managers data:", error);
     // Optionally, render an error page or message
     return (
-      <div className="text-red-500 text-center">
+      <div className="text-center text-red-500">
         Failed to load data. Please try again later.
       </div>
     );

@@ -5,17 +5,17 @@ import Link from "next/link";
 
 interface AvailableBusCardProps {
     id: string
-    busName: string;
-    startLocation: string;
-    startTime: string;
-    endLocation: string;
-    endTime: string;
-    vehicleNumber: string;
-    userStartLocation: string;
-    userEndLocation: string;
-    fare: number;
-    type: string;
-    availableSeats: number;
+    busName?: string|undefined;
+    startLocation?: string|undefined;
+    startTime?: string|undefined;
+    endLocation?: string|undefined;
+    endTime?: string|undefined;
+    vehicleNumber?: string|undefined;
+    userStartLocation?: string|undefined;
+    userEndLocation?: string|undefined;
+    fare?: number|undefined;
+    type?: string|undefined;
+    availableSeats?: number|undefined;
 }
 
 const AvailableBusCard: React.FC<AvailableBusCardProps> = ({
@@ -33,8 +33,8 @@ const AvailableBusCard: React.FC<AvailableBusCardProps> = ({
     availableSeats,
 }) => {
     return (
-        <Link href={`/booking/${id}`} className="flex flex-col px-10 py-4 border rounded-lg shadow-md bg-white w-[500px] mx-auto">
-            <div className="flex justify-between items-center gap-20 border-b pb-2 mb-2">
+        <Link href={`/booking/${id}`} className="mx-auto flex w-[500px] flex-col rounded-lg border bg-white px-10 py-4 shadow-md">
+            <div className="mb-2 flex items-center justify-between gap-20 border-b pb-2">
                 <h2 className="text-xl font-bold text-gray-800">{busName}</h2>
                 <p className="text-sm text-gray-500">{vehicleNumber}</p>
             </div>
@@ -45,17 +45,17 @@ const AvailableBusCard: React.FC<AvailableBusCardProps> = ({
                     <div>
                         <p className="font-semibold text-gray-800">Start Location</p>
                         <p className="font-semibold">{startLocation}</p>
-                        <p className="text-xs text-gray-700">{new Date(startTime).toLocaleTimeString()}</p>
+                        <p className="text-xs text-gray-700">{new Date(startTime as string).toLocaleTimeString()}</p>
                     </div>
                     <div>
                         <p className="font-semibold text-gray-800">End Location</p>
                         <p className="font-semibold">{endLocation}</p>
-                        <p className="text-xs text-gray-700">{new Date(endTime).toLocaleTimeString()}</p>
+                        <p className="text-xs text-gray-700">{new Date(endTime as string).toLocaleTimeString()}</p>
                     </div>
                 </div>
             </div>
 
-            <div className="flex justify-center items-center border-b pb-4 mb-4">
+            <div className="mb-4 flex items-center justify-center border-b pb-4">
 
                 <div className="text-sm">
                     <p className="font-semibold text-gray-800">Type</p>
@@ -64,7 +64,7 @@ const AvailableBusCard: React.FC<AvailableBusCardProps> = ({
 
             </div>
 
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
                 <div className="text-sm">
                     <p className="font-semibold text-gray-800">Start</p>
                     <p>{userStartLocation}</p>
@@ -76,7 +76,7 @@ const AvailableBusCard: React.FC<AvailableBusCardProps> = ({
                 </div>
                 <div className="text-sm">
                     <p className="font-semibold text-gray-800">Fare</p>
-                    <p className="text-green-600 font-bold">₹{fare}</p>
+                    <p className="font-bold text-green-600">₹{fare}</p>
                 </div>
                 <div className="text-sm">
                     <p className="font-semibold text-gray-800">Available Seats</p>
