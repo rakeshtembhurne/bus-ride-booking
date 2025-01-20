@@ -147,9 +147,8 @@ model Booking {
   fromLocationId String
   toLocationId   String
   date           DateTime
-  availableSeats Int
   seatNumber     Int
-  status         String
+  bookingStatus  String
   fareId         String
   bookedAt       DateTime @default(now())
 
@@ -161,4 +160,10 @@ model Booking {
   fare  Fare  @relation(fields: [fareId], references: [id], onDelete: Cascade)
 
   @@map(name: "bookings")
+}
+
+model Manager {
+  id    Int    @id @default(autoincrement())
+  name  String
+  email String @unique
 }
