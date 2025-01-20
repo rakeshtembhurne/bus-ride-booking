@@ -52,8 +52,7 @@ const SearchBuses = () => {
                     method: "GET", // Ensure GET method is specified
                 });
                 const data = await response.json();
-                console.log(data);
-
+        
                 setLocations(data);
                 console.log("Locations fetched successfully:", data);
             } catch (error) {
@@ -73,7 +72,6 @@ const SearchBuses = () => {
         const origin = formData.get("origin") as string;
         const destination = formData.get("destination") as string;
 
-        console.log({ origin, destination });
 
         if (!origin || !destination) {
             alert("Please select both origin and destination");
@@ -92,7 +90,6 @@ const SearchBuses = () => {
             }
 
             const result: Bus[] = await response.json();
-            console.log("Search results:", result);
 
             if (result.length > 0) {
                 setAvailableBuses(result); // Update state with search results
@@ -165,6 +162,7 @@ const SearchBuses = () => {
                 {availableBuses.length > 0 ? (
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {availableBuses.map((bus) => (
+                            
                             <AvailableBusCard
                             id={bus.id}
                             busName={bus.route?.vehicle?.name ?? "Unknown"} // Provide a default value

@@ -16,6 +16,7 @@ export const getFareById = async (id: string) => {
                 },
                 origin: true,
                 destination: true,
+                
             }
         })
         return fare;
@@ -24,26 +25,50 @@ export const getFareById = async (id: string) => {
     }
 }
 
-export const getAllFares = async () => {
+export const getAllFares = async ({ page = 1, limit = 10 }: { page: number, limit: number }) => {
     try {
-        const fares = await prisma.fare.findMany({
-            include: {
-                route: {
-                    include: {
-                        vehicle: true,
-                        origin: true,
-                        destination: true,
-                    }
-                },
-                origin: true,
-                destination: true,
-            }
-        })
-        return fares;
+      const total = await prisma.fare.count();  // Count the total number of fares
+      const fares = await prisma.fare.findMany({
+        include: {
+            route: {
+                include: {
+                    vehicle: true,
+                    origin: true,
+                    destination: true,
+                }
+            },
+            origin: true,
+            destination: true,
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+      });
+      return { fares, total };  // Return both fares and total
     } catch {
-        return [];
+      return { fares: [], total: 0 };
     }
-}
+  };
+
+  export const getAllFare = async () => {
+    try {
+      const fares = await prisma.fare.findMany({
+        include: {
+            route: {
+                include: {
+                    vehicle: true,
+                    origin: true,
+                    destination: true,
+                }
+            },
+            origin: true,
+            destination: true,
+        },
+      });
+      return { fares };  // Return both fares and total
+    } catch {
+      return { fares: [] };
+    }
+  };
 
 // -----------------------------------------------------------------------------
 // To Add Fare - Function

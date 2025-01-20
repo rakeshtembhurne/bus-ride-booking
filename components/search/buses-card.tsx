@@ -1,4 +1,3 @@
-
 import React from "react";
 import { MoveRight } from "lucide-react";
 import Link from "next/link";
@@ -33,8 +32,9 @@ const AvailableBusCard: React.FC<AvailableBusCardProps> = ({
     availableSeats,
 }) => {
     return (
-        <Link href={`/booking/${id}`} className="mx-auto flex w-[500px] flex-col rounded-lg border bg-white px-10 py-4 shadow-md">
-            <div className="mb-2 flex items-center justify-between gap-20 border-b pb-2">
+        
+        <Link href={`/booking/${id}`} className="flex flex-col px-10 py-4 border rounded-lg shadow-md bg-white w-[500px] mx-auto">
+            <div className="flex justify-between items-center gap-20 border-b pb-2 mb-2">
                 <h2 className="text-xl font-bold text-gray-800">{busName}</h2>
                 <p className="text-sm text-gray-500">{vehicleNumber}</p>
             </div>
@@ -55,16 +55,13 @@ const AvailableBusCard: React.FC<AvailableBusCardProps> = ({
                 </div>
             </div>
 
-            <div className="mb-4 flex items-center justify-center border-b pb-4">
-
+            <div className="flex justify-center items-center border-b pb-4 mb-4">
                 <div className="text-sm">
                     <p className="font-semibold text-gray-800">Type</p>
                     <p>{type}</p>
                 </div>
-
             </div>
-
-            <div className="flex items-center justify-between">
+            <div className="flex justify-between items-center">
                 <div className="text-sm">
                     <p className="font-semibold text-gray-800">Start</p>
                     <p>{userStartLocation}</p>
@@ -80,7 +77,7 @@ const AvailableBusCard: React.FC<AvailableBusCardProps> = ({
                 </div>
                 <div className="text-sm">
                     <p className="font-semibold text-gray-800">Available Seats</p>
-                    <p>{availableSeats}</p>
+                    <p>20</p>
                 </div>
             </div>
         </Link>
