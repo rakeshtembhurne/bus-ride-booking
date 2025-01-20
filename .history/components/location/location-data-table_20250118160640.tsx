@@ -46,6 +46,7 @@ export function DataTableDemo() {
   const [locationName, setLocationName] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [success, setSuccess] = useState("");
+  
   const [viewMode, setViewMode] = useState(false);
   const [locationId, setLocationId] = useState<string | undefined>(undefined);
 
@@ -82,9 +83,43 @@ export function DataTableDemo() {
     setIsOpen(true);
   };
 
+  // const handleSaveEdit = async () => {
+  //   if (!locationName) {
+  //     setError("Name is required");
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch(`/api/locations/edit/${locationId}`, {
+  //       method: 'PUT',
+  //       body: JSON.stringify({
+  //         name: locationName,
+  //       }),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
+
+  //     if (response.ok) {
+  //       setLocations((prevLocations) =>
+  //         prevLocations.map((location) =>
+  //           location.id === locationId
+  //             ? { ...location, name: locationName }
+  //             : location
+  //         )
+  //       );
+  //       setIsOpen(false);
+  //       setEditMode(false);
+  //     } else {
+  //       setError('Failed to update location');
+  //     }
+  //   } catch (error) {
+  //     setError('An error occurred while updating the location');
+  //   }
+  // };
+
 
   const handleEditF = (location: Location) => {
-    console.log("Orginal Name : ", locationName)
      const query = new URLSearchParams({
        name: location.name,
      }).toString();
@@ -141,7 +176,7 @@ export function DataTableDemo() {
           >
             <FontAwesomeIcon icon={faEye} />
           </Button>
-          <Button onClick={() => handleEditF(row.original)} variant="outline">
+          <Button onClick={() => handleEditF({ id: row.original.id, name: row.original.name })} variant="outline">
             <FontAwesomeIcon icon={faEdit} />
           </Button>
           <Button onClick={() => handleDelete(row.original.id)} variant="outline">
@@ -296,12 +331,12 @@ export function DataTableDemo() {
             {isOpen && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                 <div className="w-96 rounded-md bg-white p-6 shadow-md">
-                  <h3 className="mb-4 text-lg font-semibold">View Location</h3>
+                  <h3 className="mb-4 text-lg font-semibold">View Manager</h3>
                   <p>
-                    <strong>Name:</strong> {locationName}
+                    <strong>Name:</strong> {managerName}
                   </p>
                   <p>
-                    <strong>Email:</strong> {locationName}
+                    <strong>Email:</strong> {managerEmail}
                   </p>
                   <div className="mt-6 text-right">
                     <button

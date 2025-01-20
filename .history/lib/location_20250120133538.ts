@@ -64,17 +64,28 @@ export const addLocation = async (data: any) => {
 // -----------------------------------------------------------------------------
 // To Update Location - Function
 // -----------------------------------------------------------------------------
-export async function updateLocation(id, name) {
+export const updateLocation = async (id: string, name: any) => {
     try {
-      const updatedLocation = await prisma.location.update({
-        where: { id },
-        data: { name },
-      });
-      return updatedLocation;
+        const validatedData = locationSchema.partial().parse(name)
+
+        const updatedLocation = await prisma.location.update({
+            where: { id },
+            data: validatedData,
+        })
     } catch (error) {
-      throw new Error("Failed to update Location ");
+        if (error instanceof Error && "issues" in error) {
+            return {
+                error: "Invalid Input",
+                details: error.issues,
+            }
+        }
+
+        return {
+            error: "Failed to update data",
+            details: error.message,
+        }
     }
-  }
+}
 
 // -----------------------------------------------------------------------------
 // To Delete Location - Function

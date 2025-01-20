@@ -82,9 +82,43 @@ export function DataTableDemo() {
     setIsOpen(true);
   };
 
+  const handleSaveEdit = async () => {
+    if (!locationName) {
+      setError("Name is required");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/locations/edit/${locationId}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          name: locationName,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setLocations((prevLocations) =>
+          prevLocations.map((location) =>
+            location.id === locationId
+              ? { ...location, name: locationName }
+              : location
+          )
+        );
+        setIsOpen(false);
+        setEditMode(false);
+      } else {
+        setError('Failed to update location');
+      }
+    } catch (error) {
+      setError('An error occurred while updating the location');
+    }
+  };
+
 
   const handleEditF = (location: Location) => {
-    console.log("Orginal Name : ", locationName)
      const query = new URLSearchParams({
        name: location.name,
      }).toString();
@@ -141,7 +175,7 @@ export function DataTableDemo() {
           >
             <FontAwesomeIcon icon={faEye} />
           </Button>
-          <Button onClick={() => handleEditF(row.original)} variant="outline">
+          <Button onClick={() => handleSaveEdit(row.original)} variant="outline">
             <FontAwesomeIcon icon={faEdit} />
           </Button>
           <Button onClick={() => handleDelete(row.original.id)} variant="outline">

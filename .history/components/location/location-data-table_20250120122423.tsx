@@ -32,6 +32,7 @@ export type Location = {
   name : string;
 }
 export function DataTableDemo() {
+  const [data, setData] = useState<Location[]>([]);
   const [locations, setLocations] = React.useState<{ id: string; name: string }[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -46,6 +47,7 @@ export function DataTableDemo() {
   const [locationName, setLocationName] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [success, setSuccess] = useState("");
+  
   const [viewMode, setViewMode] = useState(false);
   const [locationId, setLocationId] = useState<string | undefined>(undefined);
 
@@ -82,9 +84,43 @@ export function DataTableDemo() {
     setIsOpen(true);
   };
 
+  // const handleSaveEdit = async () => {
+  //   if (!locationName) {
+  //     setError("Name is required");
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch(`/api/locations/edit/${locationId}`, {
+  //       method: 'PUT',
+  //       body: JSON.stringify({
+  //         name: locationName,
+  //       }),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
+
+  //     if (response.ok) {
+  //       setLocations((prevLocations) =>
+  //         prevLocations.map((location) =>
+  //           location.id === locationId
+  //             ? { ...location, name: locationName }
+  //             : location
+  //         )
+  //       );
+  //       setIsOpen(false);
+  //       setEditMode(false);
+  //     } else {
+  //       setError('Failed to update location');
+  //     }
+  //   } catch (error) {
+  //     setError('An error occurred while updating the location');
+  //   }
+  // };
+
 
   const handleEditF = (location: Location) => {
-    console.log("Orginal Name : ", locationName)
      const query = new URLSearchParams({
        name: location.name,
      }).toString();

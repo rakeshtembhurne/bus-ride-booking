@@ -141,7 +141,7 @@ export function DataTableDemo() {
           >
             <FontAwesomeIcon icon={faEye} />
           </Button>
-          <Button onClick={() => handleEditF(row.original)} variant="outline">
+          <Button onClick={() => handleEdit(row.original)} variant="outline">
             <FontAwesomeIcon icon={faEdit} />
           </Button>
           <Button onClick={() => handleDelete(row.original.id)} variant="outline">

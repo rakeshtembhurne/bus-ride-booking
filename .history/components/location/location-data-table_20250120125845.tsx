@@ -76,6 +76,8 @@ export function DataTableDemo() {
   };
 
   const handleEdit = (location: { id: string; name: string }) => {
+    console.log("Before Update Name:", location.name);
+
     setEditMode(true);
     setLocationId(location.id);
     setLocationName(location.name);

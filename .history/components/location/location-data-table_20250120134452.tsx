@@ -82,6 +82,41 @@ export function DataTableDemo() {
     setIsOpen(true);
   };
 
+  const handleSaveEdit = async () => {
+    if (!locationName) {
+      setError("Name is required");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/locations/edit/${locationId}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          name: locationName,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setLocations((prevLocations) =>
+          prevLocations.map((location) =>
+            location.id === locationId
+              ? { ...location, name: locationName }
+              : location
+          )
+        );
+        setIsOpen(false);
+        setEditMode(false);
+      } else {
+        setError('Failed to update location');
+      }
+    } catch (error) {
+      setError('An error occurred while updating the location');
+    }
+  };
+
 
   const handleEditF = (location: Location) => {
     console.log("Orginal Name : ", locationName)

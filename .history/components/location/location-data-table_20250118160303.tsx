@@ -46,6 +46,7 @@ export function DataTableDemo() {
   const [locationName, setLocationName] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [success, setSuccess] = useState("");
+  
   const [viewMode, setViewMode] = useState(false);
   const [locationId, setLocationId] = useState<string | undefined>(undefined);
 
@@ -82,14 +83,48 @@ export function DataTableDemo() {
     setIsOpen(true);
   };
 
+  // const handleSaveEdit = async () => {
+  //   if (!locationName) {
+  //     setError("Name is required");
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch(`/api/locations/edit/${locationId}`, {
+  //       method: 'PUT',
+  //       body: JSON.stringify({
+  //         name: locationName,
+  //       }),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
+
+  //     if (response.ok) {
+  //       setLocations((prevLocations) =>
+  //         prevLocations.map((location) =>
+  //           location.id === locationId
+  //             ? { ...location, name: locationName }
+  //             : location
+  //         )
+  //       );
+  //       setIsOpen(false);
+  //       setEditMode(false);
+  //     } else {
+  //       setError('Failed to update location');
+  //     }
+  //   } catch (error) {
+  //     setError('An error occurred while updating the location');
+  //   }
+  // };
+
 
   const handleEditF = (location: Location) => {
-    console.log("Orginal Name : ", locationName)
      const query = new URLSearchParams({
        name: location.name,
      }).toString();
  
-     const url = `/dashboard/location/create/${location.id}?${query}`;
+     const url = `/dashboard/manager/create/${location.id}?${query}`;
      router.push(url);
    };
 
@@ -141,7 +176,7 @@ export function DataTableDemo() {
           >
             <FontAwesomeIcon icon={faEye} />
           </Button>
-          <Button onClick={() => handleEditF(row.original)} variant="outline">
+          <Button onClick={() => handleEdit({ id: row.original.id, name: row.original.name })} variant="outline">
             <FontAwesomeIcon icon={faEdit} />
           </Button>
           <Button onClick={() => handleDelete(row.original.id)} variant="outline">
@@ -225,96 +260,87 @@ export function DataTableDemo() {
         </Table>
       </div>
       <div className="mt-4 flex items-center justify-between">
-              <div className="text-sm">
-                Showing {Math.min((pageIndex - 1) * pageSize + 1, total)}–
-                {Math.min(pageIndex * pageSize, total)} of {total} results
-              </div>
-              <div className="flex space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPageIndex((prev) => Math.max(prev - 1, 1))}
-                  disabled={pageIndex === 1}
-                >
-                  Previous
-                </Button>
-                {pageIndex > 3 && (
-                  <>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPageIndex(1)}
-                    >
-                      1
-                    </Button>
-                    {pageIndex > 4 && <span className="text-gray-500">...</span>}
-                  </>
-                )}
-                {Array.from(
-                  { length: Math.min(5, totalPages) }, // Only show up to 5 page numbers
-                  (_, i) => {
-                    const page = Math.max(1, pageIndex - 2) + i; // Center around the current page
-                    if (page > totalPages) return null;
-                    return (
-                      <Button
-                        key={page}
-                        variant={pageIndex === page ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setPageIndex(page)}
-                      >
-                        {page}
-                      </Button>
-                    );
-                  },
-                )}
-                {pageIndex < totalPages - 2 && (
-                  <>
-                    {pageIndex < totalPages - 3 && (
-                      <span className="text-gray-500">...</span>
-                    )}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPageIndex(totalPages)}
-                    >
-                      {totalPages}
-                    </Button>
-                  </>
-                )}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    setPageIndex((prev) => Math.min(prev + 1, totalPages))
-                  }
-                  disabled={pageIndex === totalPages}
-                >
-                  Next
-                </Button>
-              </div>
-            </div>
-            {isOpen && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="w-96 rounded-md bg-white p-6 shadow-md">
-                  <h3 className="mb-4 text-lg font-semibold">View Location</h3>
-                  <p>
-                    <strong>Name:</strong> {locationName}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {locationName}
-                  </p>
-                  <div className="mt-6 text-right">
-                    <button
-                      className="rounded-md bg-gray-500 px-4 py-2 text-white"
-                      onClick={handleCloseDialog}
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+        <div className="text-sm">
+          Showing {Math.min((pageIndex - 1) * pageSize + 1, total)}–{Math.min(pageIndex * pageSize, total)} of {total} results
+        </div>
+        <div className="flex space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPageIndex((prev) => Math.max(prev - 1, 1))}
+            disabled={pageIndex === 1}
+          >
+            Previous
+          </Button>
+          {Array.from({ length: totalPages }).map((_, i) => {
+            const page = i + 1;
+            return (
+              <Button
+                key={page}
+                variant={pageIndex === page ? "default" : "outline"}
+                size="sm"
+                onClick={() => setPageIndex(page)}
+              >
+                {page}
+              </Button>
+            );
+          })}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPageIndex((prev) => Math.min(prev + 1, totalPages))}
+            disabled={pageIndex === totalPages}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
+      {isOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="w-96 rounded-md bg-white p-6 shadow-md">
+      <h3 className="mb-4 text-lg font-semibold">
+        {viewMode ? "View Location" : editMode ? "Edit Location" : ""}
+      </h3>
+      {editMode && (
+        <>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Location Name</label>
+            <input
+              type="text"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+              value={locationName}
+              onChange={(e) => setLocationName(e.target.value)}
+            />
           </div>
-        );
-      }
-      
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+        </>
+      )}
+      {viewMode && (
+        <>
+          <p>
+            <strong>Location Name:</strong> {locationName}
+          </p>
+        </>
+      )}
+      <div className="mt-6 text-right">
+        <button
+          className="rounded-md bg-gray-500 px-4 py-2 text-white"
+          onClick={handleCloseDialog}
+        >
+          Close
+        </button>
+        {editMode && locationId && (
+          <button
+            className="ml-4 rounded-md bg-blue-500 px-4 py-2 text-white"
+            onClick={() => handleSaveEdit(locationId, locationName)}
+          >
+            Save
+          </button>
+        )}
+      </div>
+    </div>
+  </div>
+)}
+    </div>
+  );
+}

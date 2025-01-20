@@ -83,15 +83,15 @@ export function DataTableDemo() {
   };
 
 
-  const handleEditF = (location: Location) => {
-    console.log("Orginal Name : ", locationName)
-     const query = new URLSearchParams({
-       name: location.name,
-     }).toString();
- 
-     const url = `/dashboard/location/create/${location.id}?${query}`;
-     router.push(url);
-   };
+  const handleEditF = async (location: Location) => {
+    // Assuming `locationName` is the updated name
+    const updatedLocation = { ...location, name: locationName };
+    setLocations((prevLocations) =>
+      prevLocations.map((loc) =>
+        loc.id === updatedLocation.id ? updatedLocation : loc
+      )
+    );
+  };
 
   const handleView = (location: { id: string; name: string }) => {
     setViewMode(true);
