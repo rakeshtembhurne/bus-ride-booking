@@ -161,3 +161,9 @@ model Booking {
 
   @@map(name: "bookings")
 }
+
+model Manager {
+  id    Int    @id @default(autoincrement())
+  name  String
+  email String @unique
+}
