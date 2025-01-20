@@ -36,7 +36,7 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.ADMIN,
         disabled: false,
       },
-
+      {
         href: "/dashboard/manager",
         icon: "package",
         title: "Manager",
