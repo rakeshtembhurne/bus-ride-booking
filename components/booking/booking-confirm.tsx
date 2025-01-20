@@ -1,8 +1,12 @@
 'use client';
 
 import { addBooking } from "@/lib/booking";
+import convertToSubcurrency from "@/lib/convertToSubcurrency";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import { MoveRight } from "lucide-react";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useState, } from "react";
 
 interface BookingConfirmProps {
     id: string;
@@ -10,18 +14,24 @@ interface BookingConfirmProps {
     fare: number;
 }
 
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string);
+
 const BookingConfirm: React.FC<BookingConfirmProps> = ({
     id,
     userid,
     fare,
 
+}:{
+    id:string|undefined; 
+    userid:string|undefined;
+    fare:number|undefined;
 }) => {
     const [numPassengers, setNumPassengers] = useState(1);
     const [selectedDate, setSelectedDate] = useState(
         new Date().toISOString().split("T")[0]
     );
     const [seatNo, setSeatNo] = useState(1);
-
+    const router = useRouter();
     const handlePassengerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(event.target.value) || 1;
         setNumPassengers(value > 0 ? value : 1);
@@ -61,8 +71,8 @@ const BookingConfirm: React.FC<BookingConfirmProps> = ({
             }
 
             const result = await response.json();
-            console.log("Booking created:", result);
-
+            console.log("Booking created:", result); 
+            router.push(`/dashboard/payment?amount=${fare}&booking_id=${result?.id}&`);
         } catch (error) {
             console.error("Error creating booking:", error);
             alert("Failed to create booking. Please try again.");

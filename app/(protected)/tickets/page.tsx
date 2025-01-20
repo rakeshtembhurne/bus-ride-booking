@@ -64,9 +64,9 @@ const TicketsPage = async () => {
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-sm text-zinc-700">Total Fare:</p>
+                                            <p className="text-sm text-zinc-700">Status:</p>
                                             <p className="text-md font-semibold">
-                                                {ticket.bookingStatus}
+                                                     Sucessfull
                                             </p>
                                         </div>
                                     </div>
