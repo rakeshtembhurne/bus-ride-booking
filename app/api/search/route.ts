@@ -60,6 +60,8 @@ export async function GET(req: NextRequest, res: Response) {
                 return NextResponse.json({ error: "No Bus found for the selected route" });
             }
 
+            
+
             return NextResponse.json(filteredFares);
         }
 

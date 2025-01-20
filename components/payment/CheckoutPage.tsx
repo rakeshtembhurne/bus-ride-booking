@@ -45,14 +45,15 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `http://localhost:3000/dashboard/payment-success?amount=${amount}`,
+        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/tickets`,
+        
 
       },
     });
 
     if (error) {
       setErrorMessage(error.message);
-      window.location.href = `http://localhost:3000/dashboard/payment-fail`;
+      window.location.href = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/payment-fail`;
     } else {
       // Payment UI automatically closes and redirects to return_url
     }

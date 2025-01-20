@@ -4,7 +4,20 @@ import { fareSchema } from "./validations/fare";
 export const getFareById = async (id: string) => {
     try {
         const fare = await prisma.fare.findUnique({
-            where: { id }
+            where: { id },
+            include: {
+                route: {
+                    include: {
+                        vehicle: true,
+                        bookings: true,
+                        origin: true,
+                        destination: true,
+                    }
+                },
+                origin: true,
+                destination: true,
+                
+            }
         })
         return fare;
     } catch {

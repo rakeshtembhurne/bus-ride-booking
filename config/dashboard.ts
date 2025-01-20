@@ -14,7 +14,6 @@ export const sidebarLinks: SidebarNavItem[] = [
       },
       { href: "/dashboard", icon: "dashboard", title: "Dashboard" },
       { href: "/search", icon: "search", title: "Search Buses" },
-      { href: "/search", icon: "search", title: "Search Buses" },
       { href: "/dashboard/charts", icon: "lineChart", title: "Charts" },
       {
         href: "/admin/orders",
@@ -43,6 +42,8 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.ADMIN,
       },
     ],
+
+    
   },
   {
     title: "OPTIONS",

@@ -15,12 +15,11 @@ export async function POST(req: Request) {
 
         const bus = await getFareById(fareId)
         const route = await getRouteById(bus?.routeId as string);
-        console.log({route});
         const bookingData = {
             routeId: bus?.routeId as string,
             userId: userId,
-            fromLocationId: bus?.fromLocationId as string,
-            toLocationId: bus?.toLocationId as string,
+            fromLocationId: bus?.origin.id as string,
+            toLocationId: bus?.destination.id as string,
             date: new Date(date).toISOString(),
             seatNumber: seatNo,
             bookingStatus: "pending",
@@ -30,7 +29,6 @@ export async function POST(req: Request) {
 
         const result = await addBooking(bookingData);
 
-        console.log({result});
         // Check if the booking was successful
         if(result?.error)   
             return NextResponse.json(result, { status: 400 });
