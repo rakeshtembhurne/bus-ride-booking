@@ -297,10 +297,7 @@ export function DataTableDemo() {
                 <div className="w-96 rounded-md bg-white p-6 shadow-md">
                   <h3 className="mb-4 text-lg font-semibold">View Location</h3>
                   <p>
-                    <strong>Name:</strong> {locationName}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {locationName}
+                    <strong>Location:</strong> {locationName}
                   </p>
                   <div className="mt-6 text-right">
                     <button
