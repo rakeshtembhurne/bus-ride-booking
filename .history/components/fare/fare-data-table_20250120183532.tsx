@@ -28,7 +28,6 @@ export function DataTableDemo() {
 
   const totalPages = Math.ceil(total / pageSize);
 
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -38,9 +37,8 @@ export function DataTableDemo() {
         );
         if (!response.ok) throw new Error("Failed to fetch fares");
   
-        const { data, total } = await response.json();  // Destructure here
+        const { data, total } = await response.json();
   
-        // Assuming the response has an array of fares and a total count
         const formattedData = data.map((fare: any) => ({
           id: fare.id,
           routeId: fare.routeId,
@@ -48,12 +46,12 @@ export function DataTableDemo() {
           toLocation: fare.destination?.name || fare.toLocationId,
           price: fare.price,
           departureTime: fare.route?.departureTime
-          ? new Date(fare.route.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          : "N/A", // Format to show only time (e.g., 10:30 AM)
-      }));
+            ? new Date(fare.route.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            : "N/A",
+        }));
   
         setData(formattedData);
-        setTotal(total);  // Ensure you are setting the total count
+        setTotal(total);
       } catch (error) {
         setError("Failed to fetch fares");
       } finally {
@@ -64,13 +62,10 @@ export function DataTableDemo() {
     fetchData();
   }, [pageIndex, pageSize]);
 
-
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this location?')) {
       try {
-        const response = await fetch(`/api/fare/${id}`, {
-          method: 'DELETE',
-        });
+        const response = await fetch(`/api/fare/${id}`, { method: 'DELETE' });
         if (response.ok) {
           setData((prevData) => prevData.filter(fare => fare.id !== id)); 
         } else {
@@ -91,10 +86,17 @@ export function DataTableDemo() {
     setViewMode(false);
   };
 
+  const handleEditF = (fare: Fare) => {
+    const query = new URLSearchParams({
+      fromLocation: fare.fromLocationId,
+      toLocation: fare.toLocationId,
+      price : fare.price.toString(),
+    }).toString();
+  
+    const url = `/dashboard/fare/create/${fare.id}?${query}`;
+    router.push(url);
+  };
 
-  
-  
- 
   type Fare = {
     id: string;
     routeId: string;
@@ -106,39 +108,11 @@ export function DataTableDemo() {
     departureTime: number;
   };
 
-
-  const handleEditF = (fare: Fare) => {
-    // Log the values of fromLocation and toLocation
-    console.log("From Location from handleEditF:", fare.fromLocation);
-    console.log("To Location from handleEditF:", fare.toLocation);
-    
-    const query = new URLSearchParams({
-      fromLocation: fare.fromLocation || "",  // Use fare.fromLocation for the query
-      toLocation: fare.toLocation || "",      // Use fare.toLocation for the query
-      price: fare.price.toString(),
-    }).toString();
-    
-    const url = `/dashboard/fare/create/${fare.id}?${query}`;
-    router.push(url);
-  };
-
   const columns: ColumnDef<Fare>[] = [
-    {
-      accessorKey: "routeId",
-      header: "Route",
-    },
-    {
-      accessorKey: "fromLocation",
-      header: "From Location",
-    },
-    {
-      accessorKey: "toLocation",
-      header: "To Location",
-    },
-    {
-      accessorKey: "price",
-      header: "Price",
-    },
+    { accessorKey: "routeId", header: "Route" },
+    { accessorKey: "fromLocation", header: "From Location" },
+    { accessorKey: "toLocation", header: "To Location" },
+    { accessorKey: "price", header: "Price" },
   ];
 
   const table = useReactTable({
@@ -169,10 +143,7 @@ export function DataTableDemo() {
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
@@ -182,11 +153,11 @@ export function DataTableDemo() {
             {data.length ? (
               data.map((fare) => (
                 <TableRow key={fare.id}>
-                   <TableCell>
-                  {fare.fromLocation && fare.toLocation
-                    ? `${fare.fromLocation} to ${fare.toLocation} - Departs at ${fare.departureTime}`
-                    : "N/A"}
-                </TableCell>                 
+                  <TableCell>
+                    {fare.fromLocation && fare.toLocation
+                      ? `${fare.fromLocation} to ${fare.toLocation} - Departs at ${fare.departureTime}`
+                      : "N/A"}
+                  </TableCell>
                   <TableCell>{fare.fromLocation}</TableCell>
                   <TableCell>{fare.toLocation}</TableCell>
                   <TableCell>{fare.price}</TableCell>
@@ -203,13 +174,10 @@ export function DataTableDemo() {
                       >
                         <FontAwesomeIcon icon={faEye} />
                       </Button>
-                      <Button
-                          variant="link"
-                          onClick={() => handleEditF(fare)}  // Call the function with the fare object
-                        >
-                          <FontAwesomeIcon icon={faEdit} />
-                        </Button>
-                                              <Button variant="link" onClick={() => handleDelete(fare.id)}>
+                      <Button variant="link" onClick={() => handleEditF(fare)}>
+                        <FontAwesomeIcon icon={faEdit} />
+                      </Button>
+                      <Button variant="link" onClick={() => handleDelete(fare.id)}>
                         <FontAwesomeIcon icon={faTrash} />
                       </Button>
                     </div>

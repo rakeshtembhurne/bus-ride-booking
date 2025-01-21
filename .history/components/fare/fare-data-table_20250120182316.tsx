@@ -92,7 +92,16 @@ export function DataTableDemo() {
   };
 
 
+   const handleEditF = (fare: Fare) => {
+      const query = new URLSearchParams({
+        name: fare.fromLocationId,
+        email: fare.toLocationId,
+        price : string(fare.price),
+      }).toString();
   
+      const url = `/dashboard/manager/create/${manager.id}?${query}`;
+      router.push(url);
+    };
   
  
   type Fare = {
@@ -104,22 +113,6 @@ export function DataTableDemo() {
     toLocation?: string;   
     price: number;
     departureTime: number;
-  };
-
-
-  const handleEditF = (fare: Fare) => {
-    // Log the values of fromLocation and toLocation
-    console.log("From Location from handleEditF:", fare.fromLocation);
-    console.log("To Location from handleEditF:", fare.toLocation);
-    
-    const query = new URLSearchParams({
-      fromLocation: fare.fromLocation || "",  // Use fare.fromLocation for the query
-      toLocation: fare.toLocation || "",      // Use fare.toLocation for the query
-      price: fare.price.toString(),
-    }).toString();
-    
-    const url = `/dashboard/fare/create/${fare.id}?${query}`;
-    router.push(url);
   };
 
   const columns: ColumnDef<Fare>[] = [
@@ -204,12 +197,12 @@ export function DataTableDemo() {
                         <FontAwesomeIcon icon={faEye} />
                       </Button>
                       <Button
-                          variant="link"
-                          onClick={() => handleEditF(fare)}  // Call the function with the fare object
-                        >
-                          <FontAwesomeIcon icon={faEdit} />
-                        </Button>
-                                              <Button variant="link" onClick={() => handleDelete(fare.id)}>
+                        variant="link"
+                        onClick={() => router.push(`/fare/edit/${fare.id}`)}
+                      >
+                        <FontAwesomeIcon icon={faEdit} />
+                      </Button>
+                      <Button variant="link" onClick={() => handleDelete(fare.id)}>
                         <FontAwesomeIcon icon={faTrash} />
                       </Button>
                     </div>

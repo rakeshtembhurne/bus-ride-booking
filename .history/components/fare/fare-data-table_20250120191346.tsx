@@ -109,12 +109,12 @@ export function DataTableDemo() {
 
   const handleEditF = (fare: Fare) => {
     // Log the values of fromLocation and toLocation
-    console.log("From Location from handleEditF:", fare.fromLocation);
-    console.log("To Location from handleEditF:", fare.toLocation);
+    console.log("From Location:", fare.fromLocationId);
+    console.log("To Location:", fare.toLocationId);
     
     const query = new URLSearchParams({
-      fromLocation: fare.fromLocation || "",  // Use fare.fromLocation for the query
-      toLocation: fare.toLocation || "",      // Use fare.toLocation for the query
+      fromLocation: fare.fromLocationId,
+      toLocation: fare.toLocationId,
       price: fare.price.toString(),
     }).toString();
     

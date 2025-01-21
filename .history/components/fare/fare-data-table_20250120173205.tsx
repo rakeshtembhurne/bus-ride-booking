@@ -47,10 +47,7 @@ export function DataTableDemo() {
           fromLocation: fare.origin?.name || fare.fromLocationId,
           toLocation: fare.destination?.name || fare.toLocationId,
           price: fare.price,
-          departureTime: fare.route?.departureTime
-          ? new Date(fare.route.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          : "N/A", // Format to show only time (e.g., 10:30 AM)
-      }));
+        }));
   
         setData(formattedData);
         setTotal(total);  // Ensure you are setting the total count
@@ -91,9 +88,6 @@ export function DataTableDemo() {
     setViewMode(false);
   };
 
-
-  
-  
  
   type Fare = {
     id: string;
@@ -103,29 +97,12 @@ export function DataTableDemo() {
     fromLocation?: string; 
     toLocation?: string;   
     price: number;
-    departureTime: number;
-  };
-
-
-  const handleEditF = (fare: Fare) => {
-    // Log the values of fromLocation and toLocation
-    console.log("From Location from handleEditF:", fare.fromLocation);
-    console.log("To Location from handleEditF:", fare.toLocation);
-    
-    const query = new URLSearchParams({
-      fromLocation: fare.fromLocation || "",  // Use fare.fromLocation for the query
-      toLocation: fare.toLocation || "",      // Use fare.toLocation for the query
-      price: fare.price.toString(),
-    }).toString();
-    
-    const url = `/dashboard/fare/create/${fare.id}?${query}`;
-    router.push(url);
   };
 
   const columns: ColumnDef<Fare>[] = [
     {
       accessorKey: "routeId",
-      header: "Route",
+      header: "Route ID",
     },
     {
       accessorKey: "fromLocation",
@@ -180,42 +157,48 @@ export function DataTableDemo() {
           </TableHeader>
           <TableBody>
             {data.length ? (
-              data.map((fare) => (
-                <TableRow key={fare.id}>
-                   <TableCell>
-                  {fare.fromLocation && fare.toLocation
-                    ? `${fare.fromLocation} to ${fare.toLocation} - Departs at ${fare.departureTime}`
-                    : "N/A"}
-                </TableCell>                 
-                  <TableCell>{fare.fromLocation}</TableCell>
-                  <TableCell>{fare.toLocation}</TableCell>
-                  <TableCell>{fare.price}</TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="link"
-                        onClick={() => {
-                          setfromLocation(fare.fromLocation || "");
-                          settoLocation(fare.toLocation || "");
-                          setViewMode(true);
-                          setIsOpen(true);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faEye} />
-                      </Button>
-                      <Button
+              data.map((fare) => {
+                // Find the route corresponding to the fare's routeId
+                const route = routes.find((route) => route.id === fare.routeId);
+                
+                return (
+                  <TableRow key={fare.id}>
+                    <TableCell>
+                      {/* Show the route's origin and destination names */}
+                      {route
+                        ? `${route.origin?.name} to ${route.destination?.name}`
+                        : `Route ${fare.routeId}`}
+                    </TableCell>
+                    <TableCell>{fare.fromLocation}</TableCell>
+                    <TableCell>{fare.toLocation}</TableCell>
+                    <TableCell>{fare.price}</TableCell>
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <Button
                           variant="link"
-                          onClick={() => handleEditF(fare)}  // Call the function with the fare object
+                          onClick={() => {
+                            setfromLocation(fare.fromLocation || "");
+                            settoLocation(fare.toLocation || "");
+                            setViewMode(true);
+                            setIsOpen(true);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faEye} />
+                        </Button>
+                        <Button
+                          variant="link"
+                          onClick={() => router.push(`/fare/edit/${fare.id}`)}
                         >
                           <FontAwesomeIcon icon={faEdit} />
                         </Button>
-                                              <Button variant="link" onClick={() => handleDelete(fare.id)}>
-                        <FontAwesomeIcon icon={faTrash} />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
+                        <Button variant="link" onClick={() => handleDelete(fare.id)}>
+                          <FontAwesomeIcon icon={faTrash} />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">

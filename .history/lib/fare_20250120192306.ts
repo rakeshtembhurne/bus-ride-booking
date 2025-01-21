@@ -77,9 +77,6 @@ export const updateFare = async (id: string, data: any) => {
     try {
         const validatedData = fareSchema.partial().parse(data)
 
-        // Log validated data to confirm what is being received
-        console.log("Validated Data:", validatedData);
-
         const updatedFare = await prisma.fare.update({
             where: { id },
             data: validatedData,
@@ -100,7 +97,6 @@ export const updateFare = async (id: string, data: any) => {
         }
     }
 }
-
 
 // -----------------------------------------------------------------------------
 // To Delete Fare - Function
