@@ -21,17 +21,17 @@ const BookingConfirm: React.FC<BookingConfirmProps> = ({
     userid,
     fare,
 
-}:{
-    id:string|undefined; 
-    userid:string|undefined;
-    fare:number|undefined;
+}: {
+    id: string | undefined;
+    userid: string | undefined;
+    fare: number | undefined;
 }) => {
     const [numPassengers, setNumPassengers] = useState(1);
     const [selectedDate, setSelectedDate] = useState(
         new Date().toISOString().split("T")[0]
     );
     const [seatNo, setSeatNo] = useState(1);
-    const router = useRouter();
+
     const handlePassengerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(event.target.value) || 1;
         setNumPassengers(value > 0 ? value : 1);
@@ -45,6 +45,7 @@ const BookingConfirm: React.FC<BookingConfirmProps> = ({
     const handleSeatSelect = (seatNumber: number) => {
         setSeatNo(seatNumber);
     };
+
 
 
     const handleBook = async () => {
@@ -66,12 +67,19 @@ const BookingConfirm: React.FC<BookingConfirmProps> = ({
                 }),
             });
 
+            if (response.status === 409) {
+                // Handle seat reservation conflict
+                const result = await response.json();
+                alert(result.message); // Display the conflict message
+                return;
+            }
+
             if (!response.ok) {
                 throw new Error("Booking failed.");
             }
 
             const result = await response.json();
-            console.log("Booking created:", result); 
+            console.log("Booking created:", result);
             router.push(`/dashboard/payment?amount=${fare}&booking_id=${result?.id}&`);
         } catch (error) {
             console.error("Error creating booking:", error);
@@ -114,7 +122,7 @@ const BookingConfirm: React.FC<BookingConfirmProps> = ({
                     <h3 className="mb-4 text-lg font-semibold text-gray-800">
                         Select Your Seat
                     </h3>
-                    <div className="grid w-fit grid-cols-4 gap-2 rounded-lg border border-gray-200 bg-white p-6 shadow-lg">
+                    <div className="w-fit grid grid-cols-4 gap-2 bg-white p-6 rounded-lg shadow-lg border border-gray-200">
                         {Array.from({ length: 20 }, (_, index) => {
                             const seatNumber = index + 1;
                             return (
