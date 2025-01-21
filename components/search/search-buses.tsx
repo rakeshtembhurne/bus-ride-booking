@@ -52,8 +52,8 @@ const SearchBuses = () => {
                     method: "GET", // Ensure GET method is specified
                 });
                 const data = await response.json();
-        
-                setLocations(data);
+
+                setLocations(data || []);
                 console.log("Locations fetched successfully:", data);
             } catch (error) {
                 console.error("Error fetching locations:", error);
@@ -162,22 +162,23 @@ const SearchBuses = () => {
                 {availableBuses.length > 0 ? (
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {availableBuses.map((bus) => (
-                            
+
                             <AvailableBusCard
-                            id={bus.id}
-                            busName={bus.route?.vehicle?.name ?? "Unknown"} // Provide a default value
-                            startLocation={bus.route?.origin?.name ?? "Unknown"} // Add optional chaining
-                            startTime={bus.route?.departureTime ?? "Unknown"}
-                            endLocation={bus.route?.destination?.name ?? "Unknown"}
-                            endTime={bus.route?.arrivalTime ?? "Unknown"}
-                            vehicleNumber={bus.route?.vehicle?.number ?? "N/A"}
-                            userStartLocation={bus.origin?.name ?? "Unknown"}
-                            userEndLocation={bus.destination?.name ?? "Unknown"}
-                            fare={bus.price}
-                            type={bus.route?.vehicle?.type ?? "N/A"}
-                            availableSeats={bus.route?.vehicle?.seats ?? 0}
-                        />
-                        
+                                key={bus.id}
+                                id={bus.id}
+                                busName={bus.route?.vehicle?.name ?? "Unknown"} // Provide a default value
+                                startLocation={bus.route?.origin?.name ?? "Unknown"} // Add optional chaining
+                                startTime={bus.route?.departureTime ?? "Unknown"}
+                                endLocation={bus.route?.destination?.name ?? "Unknown"}
+                                endTime={bus.route?.arrivalTime ?? "Unknown"}
+                                vehicleNumber={bus.route?.vehicle?.number ?? "N/A"}
+                                userStartLocation={bus.origin?.name ?? "Unknown"}
+                                userEndLocation={bus.destination?.name ?? "Unknown"}
+                                fare={bus.price}
+                                type={bus.route?.vehicle?.type ?? "N/A"}
+                                availableSeats={bus.route?.vehicle?.seats ?? 0}
+                            />
+
                         ))}
                     </div>
                 ) : (
@@ -191,3 +192,4 @@ const SearchBuses = () => {
 };
 
 export default SearchBuses;
+
