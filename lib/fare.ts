@@ -16,6 +16,7 @@ export const getFareById = async (id: string) => {
                 },
                 origin: true,
                 destination: true,
+                
             }
         })
         return fare;

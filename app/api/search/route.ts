@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getAllFares } from "@/lib/fare";
 import { NextRequest, NextResponse } from "next/server";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { method } = req;
 
     if (method === "GET") {
@@ -59,6 +59,8 @@ export async function GET(req: NextRequest, res: Response) {
             if (filteredFares.length === 0) {
                 return NextResponse.json({ error: "No Bus found for the selected route" });
             }
+
+            
 
             return NextResponse.json(filteredFares);
         }
