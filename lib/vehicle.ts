@@ -25,7 +25,6 @@ export const getAllVehicles = async (page: number, limit: number) => {
         take: limit,
       });
       const total = await prisma.vehicle.count();
-      console.log({ vehicles, total });
       return { vehicles, total };
     } catch (error) {
       console.error("Error fetching vehicles:", error);
