@@ -1,4 +1,5 @@
 import { addBooking, getAllBookings } from "@/lib/booking";
+import { prisma } from "@/lib/db";
 import { getFareById } from "@/lib/fare";
 import { getRouteById } from "@/lib/route";
 import { NextResponse } from "next/server";
@@ -48,7 +49,6 @@ export async function POST(req: Request) {
             seatNumber: seatNo,
             bookingStatus: "pending",
             fareId: fareId,
-            availableSeats: route?.vehicle.seats as number - 1
         }
 
         const result = await addBooking(bookingData);

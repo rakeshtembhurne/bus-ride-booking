@@ -31,7 +31,7 @@ const BookingConfirm: React.FC<BookingConfirmProps> = ({
         new Date().toISOString().split("T")[0]
     );
     const [seatNo, setSeatNo] = useState(1);
-
+    const router = useRouter();
     const handlePassengerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(event.target.value) || 1;
         setNumPassengers(value > 0 ? value : 1);
