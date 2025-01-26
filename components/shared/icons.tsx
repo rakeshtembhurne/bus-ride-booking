@@ -88,7 +88,7 @@ export const Icons = {
   home: Home,
   laptop: Laptop,
   lineChart: LineChart,
-  logo: Flame,
+  logo: Bus,
   media: Image,
   messages: MessagesSquare,
   moon: Moon,
