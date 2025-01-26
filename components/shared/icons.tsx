@@ -3,6 +3,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   BookOpen,
+  Bus,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -19,6 +20,7 @@ import {
   Loader2,
   LucideIcon,
   LucideProps,
+  MapPin,
   MessagesSquare,
   Moon,
   MoreVertical,
@@ -30,8 +32,6 @@ import {
   Trash2,
   User,
   X,
-  Bus,
-  MapPin,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -43,12 +43,12 @@ export const Icons = {
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
   bookOpen: BookOpen,
+  bus: Bus,
   check: Check,
   close: X,
   copy: Copy,
   dashboard: LayoutPanelLeft,
   ellipsis: MoreVertical,
-  bus:Bus,
   mapin: MapPin,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
