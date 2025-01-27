@@ -13,12 +13,13 @@ interface Location {
 interface Bus {
     id: string;
     name: string;
-    origin: string;
-    destination: string;
+    origin: any;
+    destination: any;
     departureTime: string;
     arrivalTime: string;
     fare: number;
-    route: string;
+    route: any;
+    price: number;
 }
 
 const SearchBuses = () => {
@@ -35,11 +36,11 @@ const SearchBuses = () => {
                 const response = await fetch("/api/location", {
                     method: "GET", // Ensure GET method is specified
                 });
-                const data = await response.json();
+                const {locations=[]} = await response.json();
         
 
-                setLocations(data);
-                console.log("Locations fetched successfully:", data);
+                setLocations(locations);
+                console.log("Locations fetched successfully:", locations);
             } catch (error) {
                 console.error("Error fetching locations:", error);
             } finally {
@@ -74,10 +75,10 @@ const SearchBuses = () => {
                 throw new Error("Failed to fetch buses.");
             }
 
-            const result: Bus[] = await response.json();
+            const  {fares=[], }:{fares:Bus[]} = await response.json();
 
-            if (result.length > 0) {
-                setAvailableBuses(result); // Update state with search results
+            if (fares.length > 0) {
+                setAvailableBuses(fares); // Update state with search results
             } else {
                 setAvailableBuses([]); // Clear results if no buses are found
                 console.log("No buses found for the selected route.");
@@ -125,7 +126,7 @@ const SearchBuses = () => {
                             <option value="" disabled>
                                 Select Destination
                             </option>
-                            {locations.map((loc) => (
+                            {Array.isArray(locations) && locations.map((loc) => (
                                 <option key={loc.id} value={loc.id}>
                                     {loc.name}
                                 </option>
@@ -151,16 +152,16 @@ const SearchBuses = () => {
                             <AvailableBusCard
                                 id={bus.id}
                                 busName={bus.route.vehicle.name}
-                                startLocation={bus.route.origin.name}
-                                startTime={bus.route.departureTime}
-                                endLocation={bus.route.destination.name}
-                                endTime={bus.route.arrivalTime}
-                                vehicleNumber={bus.route.vehicle.number}
+                                startLocation={bus.route?.origin.name}
+                                startTime={bus.route?.departureTime}
+                                endLocation={bus.route?.destination.name}
+                                endTime={bus.route?.arrivalTime}
+                                vehicleNumber={bus.route?.vehicle.number}
                                 userStartLocation={bus.origin.name}
                                 userEndLocation={bus.destination.name}
                                 fare={bus.price}
-                                type={bus.route.vehicle.type}
-                                availableSeats={bus.route.vehicle.seats}
+                                type={bus.route?.vehicle.type}
+                                availableSeats={bus.route?.vehicle.seats}
                             />
                         ))}
                     </div>
