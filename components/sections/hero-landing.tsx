@@ -32,37 +32,25 @@ export default async function HeroLanding() {
           Book your comfortable and affordable bus journey today!
         </p>
 
-        <div className="flex justify-center space-x-2">
-          <Link
-            href="/login"
-            prefetch={true}
-            className={cn(
-              buttonVariants({ rounded: "xl", size: "lg" }),
-              "gap-2 px-5 text-[15px]",
-            )}
-          >
-            <span>Go to Login Page</span>
-            <Icons.arrowRight className="size-4" />
-          </Link>
-          <Link
-            href="https://github.com/mickasmt/next-auth-roles-template"
-            target="_blank"
-            rel="noreferrer"
-            className={cn(
-              buttonVariants({
-                variant: "outline",
-                rounded: "xl",
-                size: "lg",
-              }),
-              "px-4 text-[15px]",
-            )}
-          >
-            <Icons.gitHub className="mr-2 size-4" />
-            <p>
-              <span className="hidden sm:inline-block">Star on</span> GitHub
-            </p>
-          </Link>
-        </div>
+        <p>
+          2A Express is a new passenger transportation service based in Calgary,
+          Alberta, dedicated to meeting the travel needs of surrounding
+          communities.{" "}
+        </p>
+        <p>
+          We specialize in providing affordable, safe, and reliable scheduled
+          bus services. As a small business, our focus is on connecting Calgary
+          and Red Deer with convenient stops in the towns along the route. We
+          aim to offer a dependable travel option that fosters community
+          connections and supports the mobility of all passengers.
+        </p>
+        <p>
+          {" "}
+          We are running a daily service going Calgary to Red Deer in the
+          Morning and Red Deer to Calgary in the Evening. The bus starts from
+          Calgary at 06:30 am and from Red Deer at 05:00 pm. We will put updates
+          here as the service expands to other times of the day.
+        </p>
       </div>
     </section>
   );

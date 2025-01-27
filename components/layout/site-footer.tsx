@@ -6,9 +6,23 @@ import { cn } from "@/lib/utils";
 import { ModeToggle } from "@/components/layout/mode-toggle";
 
 import { NewsletterForm } from "../forms/newsletter-form";
-import { Icons } from "../shared/icons";
 
 export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
+  return (
+    <>
+      <div className="border-t py-4">
+        <div className="container flex max-w-6xl items-center justify-between">
+          <span className="text-sm text-muted-foreground">
+            Copyright &copy; 2025. All rights reserved.
+          </span>
+
+          <div className="flex items-center gap-3">
+            <ModeToggle />
+          </div>
+        </div>
+      </div>
+    </>
+  );
   return (
     <footer className={cn("border-t", className)}>
       <div className="container grid max-w-6xl grid-cols-2 gap-6 py-14 md:grid-cols-5">

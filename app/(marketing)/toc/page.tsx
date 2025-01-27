@@ -134,6 +134,11 @@ export default function IndexPage() {
             Passengers with strong odors, including perfumes or body odor, may
             also be refused service in consideration of other passengers.
           </li>
+          <li>
+            For safety and security purposes, the buses are equipped with audio
+            and video recording devices. By using the Service, passengers
+            consent to being recorded.
+          </li>
         </ol>
       </section>
 
