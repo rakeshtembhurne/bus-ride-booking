@@ -96,7 +96,6 @@ export default async function PostPage({
                 buttonVariants({
                   variant: "outline",
                   size: "sm",
-                  rounded: "lg",
                 }),
                 "h-8",
               )}
