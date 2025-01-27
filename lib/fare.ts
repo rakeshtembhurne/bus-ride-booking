@@ -6,9 +6,17 @@ export const getFareById = async (id: string) => {
         const fare = await prisma.fare.findUnique({
             where: { id },
             include: {
-                route: true,
+                route: {
+                    include: {
+                        vehicle: true,
+                        bookings: true,
+                        origin: true,
+                        destination: true,
+                    }
+                },
                 origin: true,
                 destination: true,
+                
             }
         })
         return fare;
@@ -17,20 +25,29 @@ export const getFareById = async (id: string) => {
     }
 }
 
-export const getAllFares = async () => {
+export const getAllFares = async ({ page = 1, limit = 10 }: { page: number, limit: number }) => {
     try {
-        const fares = await prisma.fare.findMany({
-            include: {
-                route: true,
-                origin: true,
-                destination: true,
-            }
-        })
-        return fares;
+      const total = await prisma.fare.count();  // Count the total number of fares
+      const fares = await prisma.fare.findMany({
+        include: {
+            route: {
+                include: {
+                    vehicle: true,
+                    origin: true,
+                    destination: true,
+                }
+            },
+            origin: true,
+            destination: true,
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+      });
+      return { fares, total };  // Return both fares and total
     } catch {
-        return [];
+      return { fares: [], total: 0 };
     }
-}
+  };
 
 // -----------------------------------------------------------------------------
 // To Add Fare - Function
