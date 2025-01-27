@@ -17,31 +17,31 @@ export default async function HeroLanding() {
           )}
           target="_blank"
         >
-          <span className="mr-3">🎉</span> Free Next SaaS Starter Here!
+          <span className="mr-3">🚌</span> 2A Express{" "}
+          <span className="mr-3">🚌</span>
         </Link>
 
         <h1 className="text-balance font-satoshi text-[40px] font-black leading-[1.15] tracking-tight sm:text-5xl md:text-6xl md:leading-[1.15]">
-          Next.js Template with{" "}
+          Your Destination{" "}
           <span className="bg-gradient-to-r from-violet-600 via-blue-600 to-cyan-500 bg-clip-text text-transparent">
-            Auth & User Roles!
+            Our Priority!
           </span>
         </h1>
 
         <p className="max-w-2xl text-balance text-muted-foreground sm:text-lg">
-          Minimalist. Sturdy. <b>Open Source</b>. <br /> Focus on your own idea
-          and... Nothing else!
+          Book your comfortable and affordable bus journey today!
         </p>
 
         <div className="flex justify-center space-x-2">
           <Link
-href="/login"
+            href="/login"
             prefetch={true}
             className={cn(
               buttonVariants({ rounded: "xl", size: "lg" }),
               "gap-2 px-5 text-[15px]",
             )}
           >
-<span>Go to Login Page</span>
+            <span>Go to Login Page</span>
             <Icons.arrowRight className="size-4" />
           </Link>
           <Link
