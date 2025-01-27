@@ -11,18 +11,19 @@ export default function IndexPage() {
         <h2 className="mb-4 text-2xl font-semibold">1. General Information</h2>
         <ol className="list-decimal space-y-2 pl-6">
           <li>
-            These terms and conditions ("Terms") apply to all passengers using
-            our scheduled passenger bus services ("Service"). By purchasing a
-            ticket or boarding a bus, you agree to these Terms.
+            These terms and conditions (&quot;Terms&quot;) apply to all
+            passengers using our scheduled passenger bus services
+            (&quot;Service&quot;). By purchasing a ticket or boarding a bus, you
+            agree to these Terms.
           </li>
           <li>
             The Service is operated in accordance with applicable Canadian laws
             and regulations.
           </li>
           <li>
-            The Service provider ("Company") reserves the right to amend these
-            Terms at any time without prior notice. Updated Terms will be posted
-            on our website and apply immediately upon posting.
+            The Service provider (&quot;Company&quot;) reserves the right to
+            amend these Terms at any time without prior notice. Updated Terms
+            will be posted on our website and apply immediately upon posting.
           </li>
           <li>
             The information available on the Company’s official website (
