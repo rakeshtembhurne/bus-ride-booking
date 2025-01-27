@@ -6,12 +6,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export async function GET(req: NextRequest, res: Response) {
-
+    return NextResponse.json({ error: "Temporarily Disabled" });
 
     try {
-        const { searchParams } = req.nextUrl; // Access the URL's query parameters
-        const origin = searchParams.get("origin");
-        const destination = searchParams.get("destination");
+        const { searchParams } = req?.nextUrl; // Access the URL's query parameters
+        const origin = searchParams?.get("origin");
+        const destination = searchParams?.get("destination");
 
 
         const allFares = await getFaresByFilter({
@@ -20,6 +20,7 @@ export async function GET(req: NextRequest, res: Response) {
         });
 
         // // Filter fares by origin and destination if provided
+        return NextResponse.json(allFares);
         // if (origin && destination) {
         //     const filteredFares = allFares.filter(
         //         (fare) =>
@@ -36,7 +37,6 @@ export async function GET(req: NextRequest, res: Response) {
         // }
 
         // Return all fares if no filters are applied
-        return NextResponse.json(allFares);
     } catch (error) {
         console.error("Error fetching fares:", error);
         return NextResponse.json({ error: "Internal server error" });
