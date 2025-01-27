@@ -142,3 +142,6 @@ Created by [@miickasmt](https://twitter.com/miickasmt) in 2023, released under t
 ## Credits
 
 Thanks to [Hosna Qasmei](https://twitter.com/hqasmei) for part of the dashboard sidebar code.
+
+## Fixed issues
+
