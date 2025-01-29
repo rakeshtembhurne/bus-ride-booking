@@ -14,11 +14,15 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const data = await req.json()
-    const updatedLocation = await updateFare(params.id, data)
-    return NextResponse.json(updatedLocation, { status: 200 })
+    const data = await req.json(); // Receive all the fields from the request body
+    const updatedLocation = await updateFare(params.id, data); // Pass all data to updateFare function
+    return NextResponse.json(updatedLocation, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to update location', details: error.message }, { status: 500 })
+    console.error(error);
+    return NextResponse.json(
+      { error: 'Failed to update location', details: error.message },
+      { status: 500 }
+    );
   }
 }
 

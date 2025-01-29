@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -11,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from "sonner";
 
 export function DataTableDemo() {
   const [data, setData] = useState<Fare[]>([]);
@@ -20,75 +23,76 @@ export function DataTableDemo() {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const [managerName, setManagerName] = useState("");
-  const [managerEmail, setManagerEmail] = useState("");
+  const [fromLocation, setfromLocation] = useState("");
+  const [toLocation, settoLocation] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [viewMode, setViewMode] = useState(false);
   const router = useRouter();
 
   const totalPages = Math.ceil(total / pageSize);
 
+  // Fetch data function moved outside of useEffect
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `/api/fare/List-fare?page=${pageIndex}&limit=${pageSize}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch fares");
+
+      const { data, total } = await response.json();  // Destructure here
+
+      // Assuming the response has an array of fares and a total count
+      const formattedData = data.map((fare: any) => ({
+        id: fare.id,
+        routeId: fare.routeId,
+        fromLocation: fare.origin?.name || fare.fromLocationId,
+        toLocation: fare.destination?.name || fare.toLocationId,
+        price: fare.price,
+        departureTime: fare.route?.departureTime
+          ? new Date(fare.route.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          : "N/A", // Format to show only time (e.g., 10:30 AM)
+      }));
+      setData(formattedData);
+      setTotal(total);  // Ensure you are setting the total count
+    } catch (error) {
+      setError("Failed to fetch fares");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `/api/fare/List-fare?page=${pageIndex}&limit=${pageSize}`
-        );
-        if (!response.ok) throw new Error("Failed to fetch fares");
-  
-        const { data, total } = await response.json();  // Destructure here
-  
-        // Assuming the response has an array of fares and a total count
-        const formattedData = data.map((fare: any) => ({
-          id: fare.id,
-          routeId: fare.routeId,
-          fromLocation: fare.origin?.name || fare.fromLocationId,
-          toLocation: fare.destination?.name || fare.toLocationId,
-          price: fare.price,
-        }));
-  
-        setData(formattedData);
-        setTotal(total);  // Ensure you are setting the total count
-      } catch (error) {
-        setError("Failed to fetch fares");
-      } finally {
-        setLoading(false);
-      }
-    };
-  
     fetchData();
   }, [pageIndex, pageSize]);
 
-
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this location?')) {
-      try {
-        const response = await fetch(`/api/fare/${id}`, {
-          method: 'DELETE',
-        });
-        if (response.ok) {
-          setData((prevData) => prevData.filter(fare => fare.id !== id)); 
-        } else {
-          setError('Failed to delete fare');
-        }
-      } catch (error) {
-        setError('An error occurred while deleting');
+    try {
+      const response = await fetch(`/api/fare/${id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        // Remove the deleted fare from the list
+        setData((prevData) => prevData.filter(fare => fare.id !== id));
+        // Show a success toast message
+        toast.success('Location deleted successfully!');
+      } else {
+        setError('Failed to delete fare');
       }
+    } catch (error) {
+      setError('An error occurred while deleting');
     }
   };
 
   const handleCloseDialog = () => {
     setIsOpen(false);
-    setManagerName("");
-    setManagerEmail("");
+    setfromLocation("");
+    settoLocation("");
     setError("");
     setEditMode(false);
     setViewMode(false);
   };
 
- 
   type Fare = {
     id: string;
     routeId: string;
@@ -97,12 +101,47 @@ export function DataTableDemo() {
     fromLocation?: string; 
     toLocation?: string;   
     price: number;
+    departureTime: number;
+  };
+
+  const handleEditF = async (updatedFare: Fare) => {
+    // Update the fare in the local state directly
+    setData((prevData) =>
+      prevData.map((fare) =>
+        fare.id === updatedFare.id ? { ...fare, ...updatedFare } : fare
+      )
+    );
+
+    const url = `/fare/create/${updatedFare.id}`;
+    const params = new URLSearchParams({
+      fromLocation: updatedFare.fromLocation || "",
+      toLocation: updatedFare.toLocation || "",
+      price: updatedFare.price.toString(),
+    }).toString();
+
+    // Update the fare in the backend
+    const response = await fetch(`/api/fare/${updatedFare.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedFare),
+    });
+
+    if (response.ok) {
+      // After successfully updating the fare, re-fetch the data
+      fetchData();
+    } else {
+      setError("Failed to update fare");
+    }
+
+    router.push(`${url}?${params}`);
   };
 
   const columns: ColumnDef<Fare>[] = [
     {
       accessorKey: "routeId",
-      header: "Route ID",
+      header: "Route",
     },
     {
       accessorKey: "fromLocation",
@@ -159,7 +198,11 @@ export function DataTableDemo() {
             {data.length ? (
               data.map((fare) => (
                 <TableRow key={fare.id}>
-                  <TableCell>{fare.routeId}</TableCell>
+                   <TableCell>
+                  {fare.fromLocation && fare.toLocation
+                    ? `${fare.fromLocation} to ${fare.toLocation} - Departs at ${fare.departureTime}`
+                    : "N/A"}
+                </TableCell>       
                   <TableCell>{fare.fromLocation}</TableCell>
                   <TableCell>{fare.toLocation}</TableCell>
                   <TableCell>{fare.price}</TableCell>
@@ -168,8 +211,8 @@ export function DataTableDemo() {
                       <Button
                         variant="link"
                         onClick={() => {
-                          setManagerName(fare.fromLocation || "");
-                          setManagerEmail(fare.toLocation || "");
+                          setfromLocation(fare.fromLocation || "");
+                          settoLocation(fare.toLocation || "");
                           setViewMode(true);
                           setIsOpen(true);
                         }}
@@ -178,7 +221,7 @@ export function DataTableDemo() {
                       </Button>
                       <Button
                         variant="link"
-                        onClick={() => router.push(`/fare/edit/${fare.id}`)}
+                        onClick={() => handleEditF(fare)}  
                       >
                         <FontAwesomeIcon icon={faEdit} />
                       </Button>
@@ -244,10 +287,10 @@ export function DataTableDemo() {
             {viewMode && (
               <>
                 <p>
-                  <strong>From Location:</strong> {managerName}
+                  <strong>From Location:</strong> {fromLocation}
                 </p>
                 <p>
-                  <strong>To Location:</strong> {managerEmail}
+                  <strong>To Location:</strong> {toLocation}
                 </p>
               </>
             )}

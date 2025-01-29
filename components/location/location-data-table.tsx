@@ -300,9 +300,6 @@ export function DataTableDemo() {
                   <p>
                     <strong>Name:</strong> {locationName}
                   </p>
-                  <p>
-                    <strong>Email:</strong> {locationName}
-                  </p>
                   <div className="mt-6 text-right">
                     <button
                       className="rounded-md bg-gray-500 px-4 py-2 text-white"

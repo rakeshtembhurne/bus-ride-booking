@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useForm, Controller, FormProvider } from "react-hook-form"
 import { useSession } from "next-auth/react"
+import { toast } from "sonner"
 
 type FareFormValues = {
   route: string;
@@ -73,7 +74,7 @@ export default function AddFarePage() {
         fromLocationId: data.fromLocation,
         toLocationId: data.toLocation,
         price: parseFloat(data.price),
-        createdByUserId: "user123",
+        createdByUserId: userId,
       }
 
 
@@ -91,6 +92,7 @@ export default function AddFarePage() {
       }
 
       const responseData = await response.json()
+      toast.success("Fare Added successfully");
       router.push("/fare")
     } catch (error) {
     }
