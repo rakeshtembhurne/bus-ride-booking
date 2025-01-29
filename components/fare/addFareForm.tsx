@@ -73,7 +73,7 @@ export default function AddFarePage() {
         fromLocationId: data.fromLocation,
         toLocationId: data.toLocation,
         price: parseFloat(data.price),
-        createdByUserId: "user123",
+        createdByUserId: userId,
       }
 
 
