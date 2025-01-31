@@ -32,7 +32,6 @@ export function DataTableDemo() {
   const totalPages = Math.ceil(total / pageSize);
 
   const fetchData = async () => {
-    setLoading(true);
     try {
       const response = await fetch(
         `/api/fare/List-fare?page=${pageIndex}&limit=${pageSize}`
@@ -211,12 +210,6 @@ export function DataTableDemo() {
                         }}
                       >
                         <FontAwesomeIcon icon={faEye} />
-                      </Button>
-                      <Button
-                        variant="link"
-                        onClick={() => handleEditF(fare)}  
-                      >
-                        <FontAwesomeIcon icon={faEdit} />
                       </Button>
                       <Button variant="link" onClick={() => handleDelete(fare.id)}>
                         <FontAwesomeIcon icon={faTrash} />

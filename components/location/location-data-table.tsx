@@ -56,7 +56,9 @@ export function DataTableDemo() {
           method: 'DELETE',
         });
         if (response.ok) {
+          // Remove the location from the state
           setLocations((prevLocations) => prevLocations.filter(location => location.id !== id));
+          toast.success("Location deleted successfully"); // Optional: show success message
         } else {
           setError('Failed to delete location');
         }
@@ -65,7 +67,6 @@ export function DataTableDemo() {
       }
     }
   };
-
   const handleCloseDialog = () => {
     setIsOpen(false);
     setLocationName("");

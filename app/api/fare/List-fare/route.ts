@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAllFares } from "@/lib/fare";  // Ensure this function is correctly fetching fares with pagination support
+import { getAllFares } from "@/lib/fare";  
 
 export async function GET(req: Request) {
   const url = new URL(req.url);

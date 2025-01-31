@@ -36,7 +36,6 @@ export default function AddFarePage() {
     fetchLocations(); // Fetch locations for dropdowns
   }, []);
   
-  // Fetch routes from API (existing logic)
   const fetchRoutes = async () => {
     try {
       const response = await fetch('/api/fare'); // API endpoint
