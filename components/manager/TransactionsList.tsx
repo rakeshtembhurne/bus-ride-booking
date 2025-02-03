@@ -42,7 +42,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-// Ensure this path is correct
+
 
 export type Manager = {
   id: string;
@@ -50,7 +50,7 @@ export type Manager = {
   email: string;
 };
 
-// Server-side function to handle API requests
+
 async function fetchManagers(pageIndex: number, pageSize: number) {
   const response = await fetch(
     `/api/managers?page=${pageIndex}&limit=${pageSize}`,
@@ -61,37 +61,7 @@ async function fetchManagers(pageIndex: number, pageSize: number) {
   return response.json();
 }
 
-// async function updateManager(
-//   managerId: string,
-//   managerName: string,
-//   managerEmail: string,
-// ) {
-//   const response = await fetch(`/api/managers/${managerId}`, {
-//     method: "PUT",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ name: managerName, email: managerEmail }),
-//   });
-//   if (!response.ok) {
-//     throw new Error("Failed to update manager");
-//   }
-//   return response.json();
-// }
 
-// async function addManager(managerName: string, managerEmail: string) {
-//   const response = await fetch("/api/managers", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ name: managerName, email: managerEmail }),
-//   });
-//   if (!response.ok) {
-//     throw new Error("Failed to add manager");
-//   }
-//   return response.json();
-// }
 
 async function deleteManager(managerId: string) {
   const response = await fetch(`/api/managers/${managerId}`, {
@@ -116,16 +86,16 @@ export default function TransactionsList() {
   const [managerEmail, setManagerEmail] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [pageIndex, setPageIndex] = useState(1); // Current page
-  const [pageSize, setPageSize] = useState(10); // Records per page
-  const [total, setTotal] = useState(0); // Total records
+  const [pageIndex, setPageIndex] = useState(1); 
+  const [pageSize, setPageSize] = useState(10); 
+  const [total, setTotal] = useState(0); 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await fetchManagers(pageIndex, pageSize);
         setData(result.data);
-        setTotal(result.total); // Set the total number of records for pagination
+        setTotal(result.total); 
       } catch (err) {
         console.error(err);
         setError("Error loading data");
@@ -413,9 +383,9 @@ export default function TransactionsList() {
             </>
           )}
           {Array.from(
-            { length: Math.min(5, totalPages) }, // Only show up to 5 page numbers
+            { length: Math.min(5, totalPages) },
             (_, i) => {
-              const page = Math.max(1, pageIndex - 2) + i; // Center around the current page
+              const page = Math.max(1, pageIndex - 2) + i; 
               if (page > totalPages) return null;
               return (
                 <Button

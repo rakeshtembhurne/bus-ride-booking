@@ -10,17 +10,17 @@ export const metadata = constructMetadata({
   description: "Manager page for only manage management.",
 });
 
-// Server-side rendering using async function
+
 export default async function AdminPage() {
-  // Authenticate the user
+ 
   const user = await getCurrentUser();
   if (!user || user.role !== "ADMIN") {
     redirect("/login");
   }
 
-  // Fetch the manager data from the API
-  const pageIndex = 1; // Initial page index
-  const pageSize = 10; // Records per page
+  
+  const pageIndex = 1; 
+  const pageSize = 10; 
 
   try {
    
@@ -33,7 +33,7 @@ export default async function AdminPage() {
     );
   } catch (error) {
     console.error("Error fetching managers data:", error);
-    // Optionally, render an error page or message
+   
     return (
       <div className="text-center text-red-500">
         Failed to load data. Please try again later.

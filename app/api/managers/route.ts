@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const newManager = await createManager(name, email); // Use the service function
+    const newManager = await createManager(name, email); 
     return new Response(JSON.stringify(newManager), { status: 201 });
   } catch (error) {
     return new Response(

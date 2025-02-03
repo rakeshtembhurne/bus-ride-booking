@@ -107,8 +107,8 @@ model Route {
   originId        String
   destinationId   String
   vehicleId       String
-  departureTime   DateTime
-  arrivalTime     DateTime
+  departureTime   String
+  arrivalTime     String
   createdByUserId String
 
   origin      Location @relation(name: "LocationOrigin", fields: [originId], references: [id], onDelete: Cascade) // Relationship to origin location

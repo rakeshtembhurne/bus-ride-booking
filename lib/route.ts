@@ -42,59 +42,136 @@ export const getAllRoutes = async () => {
 // -----------------------------------------------------------------------------
 // To Add Route - Function
 // -----------------------------------------------------------------------------
+// export const addRoute = async (data: any) => {
+//     try {
+//         const validatedData = routeSchema.parse(data)
+
+//         const route = await prisma.route.create({
+//             data: validatedData,
+//         })
+
+//         return route
+
+//     } catch (error) {
+//         //Checking validation Error
+//         if (error instanceof Error && "issues" in error) {
+//             return {
+//                 error: "Invalid Input",
+//                 details: error.issues,
+//             }
+//         }
+
+//         return {
+//             error: "Failed to Add Route",
+//             details: error.message,
+//         }
+//     }
+// }
 export const addRoute = async (data: any) => {
     try {
-        const validatedData = routeSchema.parse(data)
-
-        const route = await prisma.route.create({
-            data: validatedData,
-        })
-
-        return route
-
+      const validatedData = routeSchema.parse(data);
+  
+      const route = await prisma.route.create({
+        data: {
+          departureTime: validatedData.departureTime,
+          arrivalTime: validatedData.arrivalTime,
+          origin: {
+            connect: { id: validatedData.originId },  // Connect the existing origin by ID
+          },
+          destination: {
+            connect: { id: validatedData.destinationId }, // Connect the existing destination by ID
+          },
+          vehicle: {
+            connect: { id: validatedData.vehicleId }, // Connect the existing vehicle by ID
+          },
+          createdBy: {
+            connect: { id: "cm64uuwy100009rov0pnycdyg" }, // Static User ID for createdBy
+          },
+        },
+      });
+  
+      return route;
     } catch (error) {
-        //Checking validation Error
-        if (error instanceof Error && "issues" in error) {
-            return {
-                error: "Invalid Input",
-                details: error.issues,
-            }
-        }
-
+      if (error instanceof Error && "issues" in error) {
         return {
-            error: "Failed to Add Route",
-            details: error.message,
-        }
+          error: "Invalid Input",
+          details: error.issues,
+        };
+      }
+  
+      return {
+        error: "Failed to Add Route",
+        details: error.message,
+      };
     }
-}
+  };
+  
+  
 
 // -----------------------------------------------------------------------------
 // To Update Route - Function
 // -----------------------------------------------------------------------------
+// export const updateRoute = async (id: string, data: any) => {
+//     try {
+//         const validatedData = routeSchema.partial().parse(data)
+
+//         // Corrected the model to 'route' instead of 'location'
+//         const updatedRoute = await prisma.route.update({
+//             where: { id },
+//             data: validatedData,
+//         })
+
+//         return updatedRoute;
+//     } catch (error) {
+//         if (error instanceof Error && "issues" in error) {
+//             return {
+//                 error: "Invalid Input",
+//                 details: error.issues,
+//             }
+//         }
+
+//         return {
+//             error: "Failed to update data",
+//             details: error.message,
+//         }
+//     }
+// }
+
 export const updateRoute = async (id: string, data: any) => {
-    try {
-        const validatedData = routeSchema.partial().parse(data)
+  try {
+    const validatedData = routeSchema.partial().parse(data);
 
-        const updatedRoute = await prisma.location.update({
-            where: { id },
-            data: validatedData,
-        })
+    // Prepare the data for updating the route
+    const updateData: any = {};
 
-        return updatedRoute;
-    } catch (error) {
-        if (error instanceof Error && "issues" in error) {
-            return {
-                error: "Invalid Input",
-                details: error.issues,
-            }
-        }
+    if (validatedData.originId) updateData.origin = { connect: { id: validatedData.originId } };
+    if (validatedData.destinationId) updateData.destination = { connect: { id: validatedData.destinationId } };
+    if (validatedData.vehicleId) updateData.vehicle = { connect: { id: validatedData.vehicleId } };
 
-        return {
-            error: "Failed to update data",
-            details: error.message,
-        }
+    // Use the provided string times directly (as strings)
+    if (validatedData.departureTime) updateData.departureTime = validatedData.departureTime;
+    if (validatedData.arrivalTime) updateData.arrivalTime = validatedData.arrivalTime;
+
+    const updatedRoute = await prisma.route.update({
+      where: { id },
+      data: updateData,
+    });
+
+    return updatedRoute;
+  } catch (error) {
+    if (error instanceof Error && "issues" in error) {
+      return {
+        error: "Invalid Input",
+        details: error.issues,
+      };
     }
-}
+    return {
+      error: "Failed to update data",
+      details: error.message,
+    };
+  }
+};
+
 
 // -----------------------------------------------------------------------------
 // To Delete Route - Function

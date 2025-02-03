@@ -34,9 +34,9 @@ export default function ManagerForm() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Extract managerId from the URL
+   
     const pathParts = window.location.pathname.split("/");
-    const idFromPath = pathParts[pathParts.length - 1]; // Adjust based on your URL structure
+    const idFromPath = pathParts[pathParts.length - 1]; 
     setManagerId(idFromPath);
 
     // Extract query parameters for name and email

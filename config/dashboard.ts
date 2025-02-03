@@ -54,6 +54,13 @@ export const sidebarLinks: SidebarNavItem[] = [
         icon: "package",
         title: "Manager",
         authorizeOnly: UserRole.ADMIN,
+      },
+      {
+        href: "/dashboard/route",
+        icon: "post",
+        title: "Route",
+        authorizeOnly: UserRole.ADMIN,
+        disabled: false,
       }
     ],
 
