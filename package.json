@@ -14,6 +14,7 @@
     "lint": "next lint --fix",
     "preview": "next build && next start",
     "postinstall": "prisma generate",
+    "postpush": "prisma db push",
     "email": "email dev --dir emails --port 3333",
     "remove-content": "node ./setup.mjs"
   },
