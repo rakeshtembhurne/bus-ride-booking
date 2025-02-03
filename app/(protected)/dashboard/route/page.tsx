@@ -21,17 +21,6 @@ export default async function AdminPage() {
   const pageSize = 10; 
 
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/routes?page=${pageIndex}&limit=${pageSize}`, 
-      { cache: "no-store" } 
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch routes data");
-    }
-
-    const result = await response.json();
-
     return (
       <div className="flex flex-col gap-5">
         <RoutesList/>
