@@ -11,7 +11,6 @@ const TicketsPage = async () => {
 
     return (
         <div>
-
             {
                 tickets.map((ticket) => {
                     return (
@@ -26,22 +25,28 @@ const TicketsPage = async () => {
                                             {ticket.route.vehicle.name}
                                         </h3>
                                     </div>
-                                    <div className="flex items-start justify-center gap-10 border-t py-8">
-                                        <div>
-                                            <p className="text-zinc-600">From:</p>
-                                            <h2 className="text-2xl font-bold text-zinc-800">{ticket.route.origin.name}</h2>
-                                            <p className="text-zinc-700"></p>
-                                            <p className="text-zinc-700">
-                                                {new Date(ticket.route.departureTime).toLocaleString()}
-                                            </p>
+                                    <div className="flex flex-col items-center justify-center gap-10 border-t py-8 ">
+                                        <div className="flex gap-10">
+                                            <div>
+                                                <p className="text-zinc-600">From:</p>
+                                                <h2 className="text-2xl font-bold text-zinc-800">{ticket.route.origin.name}</h2>
+                                                <p className="text-zinc-700"></p>
+                                                <p className="text-zinc-700">
+                                                    {new Date(ticket.route.departureTime).toLocaleTimeString()}
+                                                </p>
+                                            </div>
+                                            <MoveRight className="my-auto" />
+                                            <div>
+                                                <p className="text-zinc-600">To:</p>
+                                                <h2 className="text-2xl font-bold text-zinc-800">
+                                                    {ticket.route.destination.name}
+                                                </h2>
+                                                <p className="text-zinc-700">{new Date(ticket.date).toLocaleTimeString()}</p>
+                                            </div>
                                         </div>
-                                        <MoveRight className="my-auto" />
                                         <div>
-                                            <p className="text-zinc-600">To:</p>
-                                            <h2 className="text-2xl font-bold text-zinc-800">
-                                                {ticket.route.destination.name}
-                                            </h2>
-                                            <p className="text-zinc-700">{new Date(ticket.date).toLocaleString()}</p>
+                                            <p className="text-zinc-900 font-bold">Date:</p>
+                                            <p className="text-zinc-700">{new Date(ticket.date).toLocaleDateString()}</p>
                                         </div>
                                     </div>
                                     <div className="flex justify-between border-t py-4">
@@ -66,7 +71,7 @@ const TicketsPage = async () => {
                                         <div>
                                             <p className="text-sm text-zinc-700">Status:</p>
                                             <p className="text-md font-semibold">
-                                                     Sucessfull
+                                                Successful
                                             </p>
                                         </div>
                                     </div>
