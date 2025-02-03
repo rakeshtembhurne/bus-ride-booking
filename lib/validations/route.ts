@@ -8,5 +8,5 @@ export const routeSchema = z.object({
     .regex(/^([0-9]{2}):([0-9]{2})(:([0-9]{2}))?$/, "Invalid time format. Expected HH:mm:ss or HH:mm"),
   arrivalTime: z.string().min(1, "Arrival time is required")  // Expecting HH:mm:ss format as string
     .regex(/^([0-9]{2}):([0-9]{2})(:([0-9]{2}))?$/, "Invalid time format. Expected HH:mm:ss or HH:mm"),
-//   createdByUserId: z.string().min(1, "Created by User ID is required"),
+    userId: z.string().min(1, "Created by User ID is required"),
 });
