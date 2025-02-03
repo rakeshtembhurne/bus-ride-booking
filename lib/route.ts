@@ -76,16 +76,16 @@ export const addRoute = async (data: any) => {
           departureTime: validatedData.departureTime,
           arrivalTime: validatedData.arrivalTime,
           origin: {
-            connect: { id: validatedData.originId },  // Connect the existing origin by ID
+            connect: { id: validatedData.originId },  
           },
           destination: {
-            connect: { id: validatedData.destinationId }, // Connect the existing destination by ID
+            connect: { id: validatedData.destinationId }, 
           },
           vehicle: {
-            connect: { id: validatedData.vehicleId }, // Connect the existing vehicle by ID
+            connect: { id: validatedData.vehicleId }, 
           },
           createdBy: {
-            connect: { id: "cm64uuwy100009rov0pnycdyg" }, // Static User ID for createdBy
+            connect: { id:  validatedData.userId  }, 
           },
         },
       });
@@ -141,14 +141,13 @@ export const updateRoute = async (id: string, data: any) => {
   try {
     const validatedData = routeSchema.partial().parse(data);
 
-    // Prepare the data for updating the route
     const updateData: any = {};
 
     if (validatedData.originId) updateData.origin = { connect: { id: validatedData.originId } };
     if (validatedData.destinationId) updateData.destination = { connect: { id: validatedData.destinationId } };
     if (validatedData.vehicleId) updateData.vehicle = { connect: { id: validatedData.vehicleId } };
 
-    // Use the provided string times directly (as strings)
+  
     if (validatedData.departureTime) updateData.departureTime = validatedData.departureTime;
     if (validatedData.arrivalTime) updateData.arrivalTime = validatedData.arrivalTime;
 
@@ -178,7 +177,6 @@ export const updateRoute = async (id: string, data: any) => {
 // -----------------------------------------------------------------------------
 export const deleteRoute = async (id: string) => {
     try {
-        // Check that if Route exist
         const routeToDelete = await prisma.route.findUnique({
             where: { id }
         })
@@ -186,7 +184,7 @@ export const deleteRoute = async (id: string) => {
             return { error: "Route not found" }
         }
 
-        // Delete the Route 
+
         await prisma.route.delete({ where: { id } })
         return { success: true, message: "Route delete successfully" };
 
