@@ -1,4 +1,4 @@
-import { getRouteById, updateRoute, deleteRoute } from "@/lib/route"; // Import functions for database operations
+import { getRouteById, updateRoute, deleteRoute } from "@/lib/route"; 
 import { NextResponse } from 'next/server';
 
 // ----------------------------------------------------------------------------
@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const routeId = url.pathname.split("/").pop(); // Extract routeId from URL path
+  const routeId = url.pathname.split("/").pop(); 
 
   if (!routeId) {
     return new NextResponse(
@@ -17,7 +17,7 @@ export async function GET(req: Request) {
   }
 
   try {
-    const route = await getRouteById(routeId); // Your function to get route from DB
+    const route = await getRouteById(routeId);
 
     if (!route) {
       return new NextResponse(
@@ -42,7 +42,7 @@ export async function GET(req: Request) {
 // PUT Request - To Update Route by ID
 // ----------------------------------------------------------------------------
 export async function PUT(req: Request) {
-  const routeId = req.url.split("/").pop(); // Get routeId from URL path
+  const routeId = req.url.split("/").pop(); 
   const { originId, destinationId, vehicleId, departureTime, arrivalTime, userId } = await req.json();
 
   if (!routeId) {
@@ -52,7 +52,6 @@ export async function PUT(req: Request) {
     );
   }
 
-  // Ensure at least one field is provided for updating the route
   if (!originId && !destinationId && !vehicleId && !departureTime && !arrivalTime && !userId) {
     return new NextResponse(
       JSON.stringify({ error: "At least one field is required for updating the route" }),
@@ -60,18 +59,17 @@ export async function PUT(req: Request) {
     );
   }
 
-  // Format times to ensure HH:mm:ss format (add seconds if missing)
-  const formattedDepartureTime = formatTime(departureTime); // Ensure valid time format
-  const formattedArrivalTime = formatTime(arrivalTime);     // Ensure valid time format
 
-  // Update the route in the database
+  const formattedDepartureTime = formatTime(departureTime); 
+  const formattedArrivalTime = formatTime(arrivalTime);     
+
   try {
     const updatedRoute = await updateRoute(routeId, {
       originId,
       destinationId,
       vehicleId,
-      departureTime: formattedDepartureTime,  // Apply formatted departure time
-      arrivalTime: formattedArrivalTime,      // Apply formatted arrival time
+      departureTime: formattedDepartureTime, 
+      arrivalTime: formattedArrivalTime,      
       userId
     });
 
@@ -96,7 +94,7 @@ export async function PUT(req: Request) {
 // ----------------------------------------------------------------------------
 export async function DELETE(req: Request) {
   const url = new URL(req.url);
-  const routeId = url.pathname.split("/").pop(); // Extract routeId from URL path
+  const routeId = url.pathname.split("/").pop();
 
   if (!routeId) {
     return new NextResponse(
@@ -124,17 +122,16 @@ export async function DELETE(req: Request) {
   }
 }
 
-// Helper function to ensure time is in HH:mm:ss format
 function formatTime(time: string): string {
   const timeParts = time.split(':');
   if (timeParts.length !== 2 && timeParts.length !== 3) {
     throw new Error('Invalid time format. Expected HH:mm or HH:mm:ss');
   }
 
-  // If time is in HH:mm, add seconds as '00'
+
   if (timeParts.length === 2) {
     timeParts.push('00');
   }
 
-  return timeParts.join(':');  // Return the formatted time as HH:mm:ss
+  return timeParts.join(':');  
 }
