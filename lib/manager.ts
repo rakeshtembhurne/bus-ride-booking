@@ -1,4 +1,4 @@
-// lib/managerFunctions.js
+
 import { prisma } from "@/lib/db"; 
 
 
@@ -17,13 +17,15 @@ export async function createManager(name, email) {
 }
 
 
-
-export async function getAllManagers(page = 1, limit = 10) {
+export async function getAllManagers(page , limit) {
     try {
       
       const managers = await prisma.manager.findMany({
         skip: (page - 1) * limit, 
         take: limit, 
+        orderBy: {
+          id: 'desc', 
+        },
        
       });
   

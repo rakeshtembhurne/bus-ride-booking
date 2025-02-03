@@ -22,7 +22,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-// Handler for deleting a manager
+
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
   try {
     const response = await deleteManager(parseInt(params.id)); 

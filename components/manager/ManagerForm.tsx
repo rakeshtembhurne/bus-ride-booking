@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation"; // For client-side navigation in Next.js
+import { useRouter } from "next/navigation"; 
 import { toast } from "sonner";
 
 export default function ManagerForm() {
@@ -10,11 +10,12 @@ export default function ManagerForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
+  
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      // Add new manager logic
+     
       const response = await fetch("/api/managers", {
         method: "POST",
         headers: {
@@ -28,7 +29,7 @@ export default function ManagerForm() {
       }
 
       toast.success("Manager added successfully");
-      router.push("/dashboard/manager"); // Redirect back to the list
+      router.push("/dashboard/manager"); 
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error("An error occurred while processing your request.");
@@ -77,7 +78,7 @@ export default function ManagerForm() {
           <button
               type="button"
               className="rounded-md bg-gray-500 px-4 py-2 text-white"
-              onClick={() => router.push("/dashboard/manager")} // Corrected path
+              onClick={() => router.push("/dashboard/manager")} 
             >
               Cancel
             </button>
