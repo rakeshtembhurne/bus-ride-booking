@@ -2,7 +2,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
-import RoutesList from "@/components/route/TransactionsList";
 import ManagerForm from "@/components/route/ManagerForm";
 
 export const metadata = constructMetadata({
@@ -10,7 +9,7 @@ export const metadata = constructMetadata({
   description: "Route page for only manage management.",
 });
 
-// Server-side rendering using async function
+
 export default async function AdminPage() {
   // Authenticate the user
   const user = await getCurrentUser();
@@ -18,9 +17,8 @@ export default async function AdminPage() {
     redirect("/login");
   }
 
-  // Fetch the route data from the API
-  const pageIndex = 1; // Initial page index
-  const pageSize = 10; // Records per page
+  const pageIndex = 1; 
+  const pageSize = 10; 
 
   try {
    
@@ -33,7 +31,6 @@ export default async function AdminPage() {
     );
   } catch (error) {
     console.error("Error fetching routes data:", error);
-    // Optionally, render an error page or message
     return (
       <div className="text-center text-red-500">
         Failed to load data. Please try again later.

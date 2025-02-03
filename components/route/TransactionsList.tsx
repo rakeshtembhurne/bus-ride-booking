@@ -25,30 +25,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-// Route type definition
-// export type Route = {
-//   id: string;
-//   originId: string;
-//   destinationId: string;
-//   vehicleId: string;
-//   arrivalTime: string;
-//   departureTime: string;
-// };
-
 export type Route = {
   id: string;
-  originId: string; // This could be an ID
-  originName: string; // Add this field for the name
-  destinationId: string; // This could be an ID
-  destinationName: string; // Add this field for the name
-  vehicleId: string; // This could be an ID
-  vehicleName: string; // Add this field for the name
+  originId: string;
+  originName: string;
+  destinationId: string;
+  destinationName: string;
+  vehicleId: string;
+  vehicleName: string;
   arrivalTime: string;
   departureTime: string;
 };
 
-
-// Fetch routes data
 async function fetchRoutes(pageIndex: number, pageSize: number) {
   const response = await fetch(
     `/api/routes?page=${pageIndex}&limit=${pageSize}`,
@@ -60,7 +48,6 @@ async function fetchRoutes(pageIndex: number, pageSize: number) {
   return response.json();
 }
 
-// Delete a route
 async function deleteRoute(routeId: string) {
   const response = await fetch(`/api/routes/${routeId}`, { method: "DELETE" });
   if (!response.ok) {
@@ -82,7 +69,6 @@ export default function TransactionsList() {
 
   const router = useRouter();
 
-  // Fetch data when pageIndex or pageSize changes
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -100,19 +86,16 @@ export default function TransactionsList() {
 
   const totalPages = Math.ceil(total / pageSize);
 
-  // Open route details dialog
   const handleOpenDialog = (route: Route) => {
     setRouteId(route.id);
     setIsOpen(true);
   };
 
-  // Close route details dialog
   const handleCloseDialog = () => {
     setIsOpen(false);
     setRouteId("");
   };
 
-  // Handle route deletion
   const handleDelete = async (routeId: string) => {
     if (window.confirm("Are you sure you want to delete this route?")) {
       try {
@@ -125,31 +108,29 @@ export default function TransactionsList() {
     }
   };
 
-  // Handle adding new route
   const handleAdd = () => {
     router.push("/dashboard/route/create");
   };
 
-  // Handle editing a route
   const handleEdit = (route: Route) => {
     router.push(`/dashboard/route/create/${route.id}`);
   };
 
   const columns: ColumnDef<Route>[] = [
     {
-      accessorKey: "originId",
-      header: "Origin ID",
-      cell: ({ row }) => <div>{row.getValue("originId")}</div>,
+      accessorKey: "origin",
+      header: "Origin",
+      cell: ({ row }) => <div>{row.getValue("origin")?.name}</div>,
     },
     {
-      accessorKey: "destinationId",
-      header: "Destination ID",
-      cell: ({ row }) => <div>{row.getValue("destinationId")}</div>,
+      accessorKey: "destination",
+      header: "Destination",
+      cell: ({ row }) => <div>{row.getValue("destination")?.name}</div>,
     },
     {
-      accessorKey: "vehicleId",
-      header: "Vehicle ID",
-      cell: ({ row }) => <div>{row.getValue("vehicleId")}</div>,
+      accessorKey: "vehicle",
+      header: "Vehicle",
+      cell: ({ row }) => <div>{row.getValue("vehicle")?.name}</div>,
     },
     {
       accessorKey: "arrivalTime",
@@ -185,6 +166,7 @@ export default function TransactionsList() {
       ),
     },
   ];
+
   const table = useReactTable({
     data,
     columns,
@@ -200,7 +182,7 @@ export default function TransactionsList() {
       sorting,
       columnFilters,
       columnVisibility: {
-        actions: true, // Ensure actions column is visible
+        actions: true,
       },
       rowSelection,
     },
@@ -263,6 +245,12 @@ export default function TransactionsList() {
             )}
           </TableBody>
         </Table>
+
+        {/* Displaying all data */}
+        {/* <div>
+          <h2>All Table Data:</h2>
+          <pre>{JSON.stringify(table.getRowModel().rows, null, 2)}</pre>
+        </div> */}
       </div>
 
       {/* Pagination controls */}
@@ -275,15 +263,57 @@ export default function TransactionsList() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setPageIndex(Math.max(pageIndex - 1, 1))}
+            onClick={() => setPageIndex((prev) => Math.max(prev - 1, 1))}
             disabled={pageIndex === 1}
           >
             Previous
           </Button>
+          {pageIndex > 3 && (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPageIndex(1)}
+              >
+                1
+              </Button>
+              {pageIndex > 4 && <span className="text-gray-500">...</span>}
+            </>
+          )}
+          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+            const page = Math.max(1, pageIndex - 2) + i;
+            if (page > totalPages) return null;
+            return (
+              <Button
+                key={page}
+                variant={pageIndex === page ? "default" : "outline"}
+                size="sm"
+                onClick={() => setPageIndex(page)}
+              >
+                {page}
+              </Button>
+            );
+          })}
+          {pageIndex < totalPages - 2 && (
+            <>
+              {pageIndex < totalPages - 3 && (
+                <span className="text-gray-500">...</span>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPageIndex(totalPages)}
+              >
+                {totalPages}
+              </Button>
+            </>
+          )}
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setPageIndex(Math.min(pageIndex + 1, totalPages))}
+            onClick={() =>
+              setPageIndex((prev) => Math.min(prev + 1, totalPages))
+            }
             disabled={pageIndex === totalPages}
           >
             Next
@@ -297,21 +327,22 @@ export default function TransactionsList() {
           <div className="w-96 rounded-md bg-white p-6 shadow-md">
             <h3 className="mb-4 text-lg font-semibold">View Route</h3>
             <div>
-              <p>
+              {/* <p>
                 <strong>Route ID:</strong> {routeId}
-              </p>
+              </p> */}
               <p>
                 <strong>Origin Name:</strong>{" "}
-                {data.find((route) => route.id === routeId)?.originId}
+                {data.find((route) => route.id === routeId)?.origin?.name}
               </p>
               <p>
                 <strong>Destination Name:</strong>{" "}
-                {data.find((route) => route.id === routeId)?.destinationId}
+                {data.find((route) => route.id === routeId)?.destination?.name}
               </p>
               <p>
                 <strong>Vehicle Name:</strong>{" "}
-                {data.find((route) => route.id === routeId)?.vehicleId}
+                {data.find((route) => route.id === routeId)?.vehicle?.name}
               </p>
+
               <p>
                 <strong>Arrival Time:</strong>{" "}
                 {data.find((route) => route.id === routeId)?.arrivalTime}
