@@ -23,26 +23,31 @@ interface Bus {
 }
 
 const SearchBuses = () => {
-    const [locations, setLocations] = useState<Location[]>([]); // Store locations data
+    const [locations, setLocations] = useState<any[]>([]); // Store locations data
     const [loading, setLoading] = useState(true); // Track loading state
     const [availableBuses, setAvailableBuses] = useState<Bus[]>([]); // State for search results
+    const [error, setError] = useState("");
 
 
     // Fetch locations from the API
     useEffect(() => {
         const fetchLocations = async () => {
             try {
-                console.log("Fetching locations...");
-                const response = await fetch("/api/location", {
-                    method: "GET", // Ensure GET method is specified
-                });
-                const {locations=[]} = await response.json();
-        
+                console.log("Fetching locations")
 
-                setLocations(locations);
-                console.log("Locations fetched successfully:", locations);
-            } catch (error) {
-                console.error("Error fetching locations:", error);
+                const response = await fetch("/api/locations");
+                const data = await response.json();
+
+                console.log("Locations: ",data)
+
+                if (response.ok) {
+                  setLocations(data.locations || []); // Ensure locations is set to an empty array if missing
+                  console.log(response)
+                } else {
+                  setError(data.error || "Failed to fetch locations");
+                }
+              } catch (error) {
+                setError("Error fetching locations");
             } finally {
                 setLoading(false);
             }
