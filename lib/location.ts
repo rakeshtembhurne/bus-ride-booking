@@ -19,12 +19,31 @@ export const getLocationById = async (id: string) => {
 // -----------------------------------------------------------------------------
 // To Get All Locations - Function
 // -----------------------------------------------------------------------------
-export const getAllLocations = async () => {
+export const getAllLocations = async ({ page = 1, limit = 10 }: { page: number, limit: number }) => {
     try {
-        const locations = await prisma.location.findMany();
-        return locations;
+        const total = await prisma.location.count();
+        const locations = await prisma.location.findMany({
+            skip: (page - 1) * limit,
+            take: limit,
+        })
+
+        return {locations, total};
     } catch {
-        return [];
+        return { locations: [], total: 0 };
+    }
+}
+
+// -----------------------------------------------------------------------------
+// To Get All Locations - Function
+// -----------------------------------------------------------------------------
+export const getAllLocationsWithoutPagination = async () => {
+    try {
+        const total = await prisma.location.count();
+        const locations = await prisma.location.findMany();
+
+        return {locations, total};
+    } catch {
+        return { locations: [], total: 0 };
     }
 }
 
@@ -59,28 +78,17 @@ export const addLocation = async (data: any) => {
 // -----------------------------------------------------------------------------
 // To Update Location - Function
 // -----------------------------------------------------------------------------
-export const updateLocation = async (id: string, data: any) => {
+export async function updateLocation(id, name) {
     try {
-        const validatedData = locationSchema.partial().parse(data)
-
-        const updatedLocation = await prisma.location.update({
-            where: { id },
-            data: validatedData,
-        })
+      const updatedLocation = await prisma.location.update({
+        where: { id },
+        data: { name },
+      });
+      return updatedLocation;
     } catch (error) {
-        if (error instanceof Error && "issues" in error) {
-            return {
-                error: "Invalid Input",
-                details: error.issues,
-            }
-        }
-
-        return {
-            error: "Failed to update data",
-            details: error.message,
-        }
+      throw new Error("Failed to update Location ");
     }
-}
+  }
 
 // -----------------------------------------------------------------------------
 // To Delete Location - Function
