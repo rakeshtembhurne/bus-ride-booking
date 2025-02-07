@@ -37,7 +37,7 @@ export function DataTableDemo() {
         `/api/fare/List-fare?page=${pageIndex}&limit=${pageSize}`
       );
       if (!response.ok) throw new Error("Failed to fetch fares");
-      const { data, total } = await response.json();  
+      const { data, total } = await response.json();
 
       const formattedData = data.map((fare: any) => ({
         id: fare.id,
@@ -45,10 +45,10 @@ export function DataTableDemo() {
         fromLocation: fare.origin?.name || fare.fromLocationId,
         toLocation: fare.destination?.name || fare.toLocationId,
         price: fare.price,
-        departureTime:fare.route.departureTime,
+        departureTime: fare.route.departureTime,
       }));
       setData(formattedData);
-      setTotal(total);  
+      setTotal(total);
     } catch (error) {
       setError("Failed to fetch fares");
     } finally {
@@ -90,8 +90,8 @@ export function DataTableDemo() {
     routeId: string;
     fromLocationId: string;
     toLocationId: string;
-    fromLocation?: string; 
-    toLocation?: string;   
+    fromLocation?: string;
+    toLocation?: string;
     price: number;
     departureTime: number;
   };
@@ -164,11 +164,14 @@ export function DataTableDemo() {
   return (
     <div className="w-full">
       {error && <div className="text-red-500">{error}</div>}
-      <div className="flex items-center justify-end py-4">
+
+      <div className="flex items-center justify-between py-4">
+        <h1 className="text-xl font-bold">Fare Data Table</h1>
         <Button className="max-w-sm" onClick={() => router.push("/fare/addForm")}>
           Add Fare
         </Button>
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -179,9 +182,9 @@ export function DataTableDemo() {
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -191,11 +194,11 @@ export function DataTableDemo() {
             {data.length ? (
               data.map((fare) => (
                 <TableRow key={fare.id}>
-                   <TableCell>
-                  {fare.fromLocation && fare.toLocation
-                    ? `${fare.fromLocation} to ${fare.toLocation} - Departs at ${fare.departureTime}`
-                    : "N/A"}
-                </TableCell>       
+                  <TableCell>
+                    {fare.fromLocation && fare.toLocation
+                      ? `${fare.fromLocation} to ${fare.toLocation} - Departs at ${fare.departureTime}`
+                      : "N/A"}
+                  </TableCell>
                   <TableCell>{fare.fromLocation}</TableCell>
                   <TableCell>{fare.toLocation}</TableCell>
                   <TableCell>{fare.price}</TableCell>
