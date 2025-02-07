@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "routes" ALTER COLUMN "departureTime" SET DATA TYPE TEXT,
-ALTER COLUMN "arrivalTime" SET DATA TYPE TEXT;

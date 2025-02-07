@@ -4,18 +4,23 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Select from "react-select";
+import { useSession } from "next-auth/react"
 
 export default function RouteForm({ routeId }: { routeId?: string }) {
+  const { data: session } = useSession()
+  
   const [originId, setOriginId] = useState<string | null>(null);
   const [destinationId, setDestinationId] = useState<string | null>(null);
   const [vehicleId, setVehicleId] = useState<string | null>(null);
   const [departureTime, setDepartureTime] = useState("");
   const [arrivalTime, setArrivalTime] = useState("");
   const [error, setError] = useState("");
-  const [userId, setUserId] = useState(""); // To hold the user ID (hidden field)
-  const [locations, setLocations] = useState<any[]>([]); // Store locations fetched from the API
-  const [vehicles, setVehicles] = useState<any[]>([]); // Store vehicles fetched from the API
+  const [userId, setUserId] = useState(session?.user?.id); 
+  const [locations, setLocations] = useState<any[]>([]); 
+  const [vehicles, setVehicles] = useState<any[]>([]); 
   const router = useRouter();
+
+   
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -23,7 +28,7 @@ export default function RouteForm({ routeId }: { routeId?: string }) {
         const response = await fetch("/api/locations");
         const data = await response.json();
         if (response.ok) {
-          setLocations(data.locations || []); // Ensure locations is set to an empty array if missing
+          setLocations(data.locations || []); 
         } else {
           setError(data.error || "Failed to fetch locations");
         }
@@ -37,7 +42,7 @@ export default function RouteForm({ routeId }: { routeId?: string }) {
         const response = await fetch("/api/vehicle");
         const data = await response.json();
         if (response.ok) {
-          setVehicles(data.data || []); // Make sure you're using the correct response format
+          setVehicles(data.data || []); 
         } else {
           setError(data.error || "Failed to fetch vehicles");
         }
@@ -174,6 +179,19 @@ export default function RouteForm({ routeId }: { routeId?: string }) {
         </div>
 
         <div className="flex space-x-4">
+        <div className="flex-1">
+            <label htmlFor="arrivalTime" className="block text-sm font-medium">
+              Arrival Time
+            </label>
+            <input
+              type="time"
+              id="arrivalTime"
+              value={arrivalTime}
+              onChange={(e) => setArrivalTime(e.target.value)}
+              required
+              className="w-full p-2 border rounded-md"
+            />
+          </div>
           <div className="flex-1">
             <label htmlFor="departureTime" className="block text-sm font-medium">
               Departure Time
@@ -187,21 +205,9 @@ export default function RouteForm({ routeId }: { routeId?: string }) {
               className="w-full p-2 border rounded-md"
             />
           </div>
-
-          <div className="flex-1">
-            <label htmlFor="arrivalTime" className="block text-sm font-medium">
-              Arrival Time
-            </label>
-            <input
-              type="time"
-              id="arrivalTime"
-              value={arrivalTime}
-              onChange={(e) => setArrivalTime(e.target.value)}
-              required
-              className="w-full p-2 border rounded-md"
-            />
-          </div>
+        
         </div>
+
 
         <input type="hidden" name="userId" value={userId} />
 
