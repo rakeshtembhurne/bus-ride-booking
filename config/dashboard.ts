@@ -14,7 +14,7 @@ export const sidebarLinks: SidebarNavItem[] = [
     {
       href: "/location",
       icon: "mapin",
-      title: "Location Panel",
+      title: "Location",
       authorizeOnly: UserRole.ADMIN,
     },
     {
@@ -39,7 +39,7 @@ export const sidebarLinks: SidebarNavItem[] = [
       authorizeOnly: UserRole.ADMIN,
     },
 
-    { href: "/search", icon: "search", title: "Search Buses" },
+    { href: "/search", icon: "search", title: "Book Bus" },
     { href: "/tickets", icon: "ticket", title: "Tickets" },
       // {
       //   href: "/dashboard/manager",

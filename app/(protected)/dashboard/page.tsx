@@ -11,7 +11,7 @@ export const metadata = constructMetadata({
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-
+  
   return (
     <>
       <DashboardHeader
