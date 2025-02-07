@@ -9,15 +9,18 @@ export async function GET(req: NextRequest, res: NextResponse) {
     console.log("Request Query:", req.url);
     const { searchParams } = new URL(req.url);
     const date = searchParams.get("date") || "";
+    const id = searchParams.get("id") || "";
 
-    if (!date || typeof date !== "string") {
-        return NextResponse.json({ error: "Invalid or missing date parameter" }, {status: 400});
+    if (!date || typeof date !== "string" || !id || typeof id !== "string") {
+        return NextResponse.json({ error: "Invalid or missing date or id parameter" }, {status: 400});
     }
 
     try {
         const bookedSeats = await prisma.booking.findMany({
             where: {
                 date: new Date(date),
+                fareId: id,
+                bookingStatus: "successful"
             },
             select: { seatNumber: true },
         });

@@ -22,7 +22,7 @@ const BookingConfirm: React.FC<BookingConfirmProps> = ({ id, userid, fare, seats
         const fetchBookedSeats = async () => {
             if (!selectedDate) return;
             try {
-                const response = await fetch(`/api/booked-seats?date=${selectedDate}`);
+                const response = await fetch(`/api/booked-seats?date=${selectedDate}&id=${id}`);
                 const data = await response.json();
                 console.log("Selected Seats: ", data)
                 setBookedSeats(data.bookedSeats || []); // Ensure it's an array

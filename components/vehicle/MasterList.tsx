@@ -71,7 +71,7 @@ export default function VehicleList() {
     const fetchData = async () => {
       try {
         const result = await fetchVehicles(pageIndex, pageSize);
-        console.log("Fetched Data:", result); 
+        console.log("Fetched Data:", result);
         setData(result.data);
         setTotal(result.total);
       } catch (err) {
@@ -117,8 +117,8 @@ export default function VehicleList() {
     { accessorKey: "seats", header: "Seats" },
     { accessorKey: "type", header: "Type" },
     {
-      id: "actions", 
-      header: "Actions", 
+      id: "actions",
+      header: "Actions",
       cell: ({ row }) => (
         <div className="flex space-x-2">
           <Button onClick={() => handleView(row.original)} variant="outline">
@@ -153,9 +153,9 @@ export default function VehicleList() {
 
   return (
     <div className="w-full">
-      <h2 className="mb-4 text-lg font-semibold">Vehicle List</h2>
 
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex justify-between items-center">
+        <h2 className="text-xl font-bold">Vehicle List</h2>
         <button
           onClick={() => router.push("/dashboard/vehicle/create")}
           className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
@@ -185,9 +185,9 @@ export default function VehicleList() {
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
                   </TableHead>
                 ))}
               </TableRow>
