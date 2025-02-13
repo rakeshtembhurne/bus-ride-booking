@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import Select from "react-select";
 import { toast } from "sonner";
 
-// Update Route API request
+
 async function updateRoute(
   routeId: string,
   originId: string,
@@ -43,26 +43,24 @@ export default function RouteForm() {
   const [arrivalTime, setArrivalTime] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(""); // <-- Declare success state
-  const [locations, setLocations] = useState<any[]>([]); // Ensure locations is an array
+  const [success, setSuccess] = useState(""); 
+  const [locations, setLocations] = useState<any[]>([]);
   const [vehicles, setVehicles] = useState<any[]>([]);
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const router = useRouter();
 
-  // Extract routeId from URL and fetch data
   useEffect(() => {
     const pathParts = window.location.pathname.split("/");
     const idFromPath = pathParts[pathParts.length - 1];
     setRouteId(idFromPath);
 
-    // Fetch Locations and Vehicles
     const fetchLocations = async () => {
       try {
         const response = await fetch("/api/locations");
         const data = await response.json();
         if (response.ok) {
-          setLocations(data.locations || []); // Ensure locations is set to an empty array if missing
+          setLocations(data.locations || []); 
         } else {
           setError(data.error || "Failed to fetch locations");
         }
@@ -76,7 +74,7 @@ export default function RouteForm() {
         const response = await fetch("/api/vehicle");
         const data = await response.json();
         if (response.ok) {
-          setVehicles(data.data || []); // Make sure you're using the correct response format
+          setVehicles(data.data || []); 
         } else {
           setError(data.error || "Failed to fetch vehicles");
         }
@@ -85,7 +83,7 @@ export default function RouteForm() {
       }
     };
 
-    // Fetch Route data when routeId is available
+   
     const fetchRoute = async () => {
       try {
         const routeRes = await fetch(`/api/routes/${routeId}`);
@@ -95,7 +93,7 @@ export default function RouteForm() {
           );
         }
         const routeData = await routeRes.json();
-        console.log("Fetched Route:", routeData); // Log the fetched route data
+        console.log("Fetched Route:", routeData); 
 
         setOriginId(routeData.originId);
         setDestinationId(routeData.destinationId);
@@ -114,20 +112,19 @@ export default function RouteForm() {
     fetchVehicles();
   }, [routeId]);
 
-  // Handle form submission
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
     setError("");
-    setSuccess(""); // Reset success on each submit
+    setSuccess(""); 
   
-    // Log the data to verify
     console.log({
       originId,
       destinationId,
       vehicleId,
-      departureTime,  // Ensure this is in HH:mm:ss format
-      arrivalTime,    // Ensure this is in HH:mm:ss format
+      departureTime,  
+      arrivalTime,   
     });
   
     try {
@@ -141,8 +138,8 @@ export default function RouteForm() {
         originId,
         destinationId,
         vehicleId,
-        departureTime,  // Time as string
-        arrivalTime     // Time as string
+        departureTime,  
+        arrivalTime    
       );
       setSuccess("Route updated successfully");
       toast.success("Route updated successfully");
@@ -152,19 +149,19 @@ export default function RouteForm() {
     } finally {
       setTimeout(() => {
         router.push("/dashboard/route");
-      }, 1500); // Delay to show success message
+      }, 1500); 
       setLoading(false);
     }
   };
   
   
 
-  // Helper function to find location by id
+ 
   const safeFindLocation = (id: string | null) => {
     return locations.find((loc) => loc.id === id) || null;
   };
 
-  // Helper function to find vehicle by id
+  
   const safeFindVehicle = (id: string | null) => {
     return vehicles.find((vehicle) => vehicle.id === id) || null;
   };
@@ -275,6 +272,23 @@ export default function RouteForm() {
 
         {/* Departure & Arrival Time Fields */}
         <div className="mb-4 flex space-x-4">
+
+        <div className="flex-1">
+            <label
+              htmlFor="arrivalTime"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Arrival Time
+            </label>
+            <input
+              type="time"
+              id="arrivalTime"
+              value={arrivalTime}
+              onChange={(e) => setArrivalTime(e.target.value)}
+              required
+              className="mt-1 w-full rounded-md border-gray-300 p-2 shadow-sm"
+            />
+          </div>
           <div className="flex-1">
             <label
               htmlFor="departureTime"
@@ -292,22 +306,7 @@ export default function RouteForm() {
             />
           </div>
 
-          <div className="flex-1">
-            <label
-              htmlFor="arrivalTime"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Arrival Time
-            </label>
-            <input
-              type="time"
-              id="arrivalTime"
-              value={arrivalTime}
-              onChange={(e) => setArrivalTime(e.target.value)}
-              required
-              className="mt-1 w-full rounded-md border-gray-300 p-2 shadow-sm"
-            />
-          </div>
+         
         </div>
 
         {/* Hidden Field for User ID (if needed) */}

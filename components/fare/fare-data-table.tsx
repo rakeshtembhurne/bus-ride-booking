@@ -37,7 +37,6 @@ export function DataTableDemo() {
         `/api/fare/List-fare?page=${pageIndex}&limit=${pageSize}`
       );
       if (!response.ok) throw new Error("Failed to fetch fares");
-
       const { data, total } = await response.json();  
 
       const formattedData = data.map((fare: any) => ({
@@ -46,9 +45,7 @@ export function DataTableDemo() {
         fromLocation: fare.origin?.name || fare.fromLocationId,
         toLocation: fare.destination?.name || fare.toLocationId,
         price: fare.price,
-        departureTime: fare.route?.departureTime
-          ? new Date(fare.route.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          : "N/A",
+        departureTime:fare.route.departureTime,
       }));
       setData(formattedData);
       setTotal(total);  
@@ -147,6 +144,10 @@ export function DataTableDemo() {
       accessorKey: "price",
       header: "Price",
     },
+    {
+      accessorKey: "actions",
+      header: "Actions",
+    },
   ];
 
   const table = useReactTable({
@@ -163,7 +164,9 @@ export function DataTableDemo() {
   return (
     <div className="w-full">
       {error && <div className="text-red-500">{error}</div>}
-      <div className="flex items-center justify-between py-4">
+      <div className="flex items-center justify-between mb-4">
+      <h1 className="text-xl font-bold">Fare</h1>
+
         <Button className="max-w-sm" onClick={() => router.push("/fare/addForm")}>
           Add Fare
         </Button>
