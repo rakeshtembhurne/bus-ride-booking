@@ -1,6 +1,6 @@
 // pages/api/locations.ts
 
-import { getAllLocations, getAllLocationsWithoutPagination } from "@/lib/location"; // Adjust the import path based on your project structure
+import { getAllLocationsWithoutPagination } from "@/lib/location"; // Adjust the import path based on your project structure
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request, res: Response) {
